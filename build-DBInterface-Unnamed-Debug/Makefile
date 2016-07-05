@@ -49,12 +49,14 @@ SOURCES       = ../DBInterface/main.cpp \
 		../DBInterface/src/DataBuffer.cpp \
 		../DBInterface/src/dbinterface.cpp \
 		../DBInterface/src/logwriter.cpp \
-		../DBInterface/src/slevel.cpp 
+		../DBInterface/src/slevel.cpp \
+		../DBInterface/src/HTTPRequest.cpp 
 OBJECTS       = main.o \
 		DataBuffer.o \
 		dbinterface.o \
 		logwriter.o \
-		slevel.o
+		slevel.o \
+		HTTPRequest.o
 DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/common/shell-unix.conf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/common/unix.conf \
@@ -112,7 +114,8 @@ DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		../DBInterface/src/DataBuffer.cpp \
 		../DBInterface/src/dbinterface.cpp \
 		../DBInterface/src/logwriter.cpp \
-		../DBInterface/src/slevel.cpp
+		../DBInterface/src/slevel.cpp \
+		../DBInterface/src/HTTPRequest.cpp
 QMAKE_TARGET  = DBInterface
 DESTDIR       = #avoid trailing-slash linebreak
 TARGET        = DBInterface
@@ -263,7 +266,7 @@ qmake_all: FORCE
 
 dist: 
 	@test -d .tmp/DBInterface1.0.0 || mkdir -p .tmp/DBInterface1.0.0
-	$(COPY_FILE) --parents $(DIST) .tmp/DBInterface1.0.0/ && $(COPY_FILE) --parents ../DBInterface/include/config.h ../DBInterface/include/DataBuffer.h ../DBInterface/include/dbinterface.h ../DBInterface/include/logwriter.h ../DBInterface/include/slevel.h .tmp/DBInterface1.0.0/ && $(COPY_FILE) --parents ../DBInterface/main.cpp ../DBInterface/src/DataBuffer.cpp ../DBInterface/src/dbinterface.cpp ../DBInterface/src/logwriter.cpp ../DBInterface/src/slevel.cpp .tmp/DBInterface1.0.0/ && (cd `dirname .tmp/DBInterface1.0.0` && $(TAR) DBInterface1.0.0.tar DBInterface1.0.0 && $(COMPRESS) DBInterface1.0.0.tar) && $(MOVE) `dirname .tmp/DBInterface1.0.0`/DBInterface1.0.0.tar.gz . && $(DEL_FILE) -r .tmp/DBInterface1.0.0
+	$(COPY_FILE) --parents $(DIST) .tmp/DBInterface1.0.0/ && $(COPY_FILE) --parents ../DBInterface/include/config.h ../DBInterface/include/DataBuffer.h ../DBInterface/include/dbinterface.h ../DBInterface/include/logwriter.h ../DBInterface/include/slevel.h ../DBInterface/include/HTTPRequest.h .tmp/DBInterface1.0.0/ && $(COPY_FILE) --parents ../DBInterface/main.cpp ../DBInterface/src/DataBuffer.cpp ../DBInterface/src/dbinterface.cpp ../DBInterface/src/logwriter.cpp ../DBInterface/src/slevel.cpp ../DBInterface/src/HTTPRequest.cpp .tmp/DBInterface1.0.0/ && (cd `dirname .tmp/DBInterface1.0.0` && $(TAR) DBInterface1.0.0.tar DBInterface1.0.0 && $(COMPRESS) DBInterface1.0.0.tar) && $(MOVE) `dirname .tmp/DBInterface1.0.0`/DBInterface1.0.0.tar.gz . && $(DEL_FILE) -r .tmp/DBInterface1.0.0
 
 
 clean:compiler_clean 
@@ -304,7 +307,8 @@ main.o: ../DBInterface/main.cpp ../DBInterface/include/DataBuffer.h \
 		../DBInterface/include/dbinterface.h \
 		../DBInterface/include/config.h \
 		../DBInterface/include/logwriter.h \
-		../DBInterface/include/slevel.h
+		../DBInterface/include/slevel.h \
+		../DBInterface/include/HTTPRequest.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o main.o ../DBInterface/main.cpp
 
 DataBuffer.o: ../DBInterface/src/DataBuffer.cpp ../DBInterface/include/DataBuffer.h
@@ -314,7 +318,8 @@ dbinterface.o: ../DBInterface/src/dbinterface.cpp ../DBInterface/include/dbinter
 		../DBInterface/include/DataBuffer.h \
 		../DBInterface/include/config.h \
 		../DBInterface/include/logwriter.h \
-		../DBInterface/include/slevel.h
+		../DBInterface/include/slevel.h \
+		../DBInterface/include/HTTPRequest.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o dbinterface.o ../DBInterface/src/dbinterface.cpp
 
 logwriter.o: ../DBInterface/src/logwriter.cpp ../DBInterface/include/logwriter.h \
@@ -324,6 +329,12 @@ logwriter.o: ../DBInterface/src/logwriter.cpp ../DBInterface/include/logwriter.h
 slevel.o: ../DBInterface/src/slevel.cpp ../DBInterface/include/slevel.h \
 		../DBInterface/include/logwriter.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o slevel.o ../DBInterface/src/slevel.cpp
+
+HTTPRequest.o: ../DBInterface/src/HTTPRequest.cpp ../DBInterface/include/HTTPRequest.h \
+		../DBInterface/include/logwriter.h \
+		../DBInterface/include/slevel.h \
+		../DBInterface/include/config.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o HTTPRequest.o ../DBInterface/src/HTTPRequest.cpp
 
 ####### Install
 

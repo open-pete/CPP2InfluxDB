@@ -12,6 +12,7 @@
 #include "DataBuffer.h"
 #include "config.h"
 #include "logwriter.h"
+#include "HTTPRequest.h"
 
 /**
  * DBInterface class
@@ -46,6 +47,7 @@ class DBInterface {
         DBInterface& operator= (const DBInterface& dbInterface_); // must be private to avoid creating an new DBInterface-instance by copying
 
         /* --- interfacing the database --- */
+        void createIfNotCreatedDataBase();
         bool dbFailure = false;
         LogWriter log;
 };

@@ -6,6 +6,7 @@
  * @version 1.0 20160704
  */
 
+
 #include "../include/dbinterface.h"
 
 /**
@@ -13,10 +14,13 @@
  * @brief creates a LogWriter-object
  */
 void DBInterface::init() {
+    createIfNotCreatedDataBase();
+
     // create LogWriter-object
     log = LogWriter("DBInterface", PATH_OF_LOGFILE);
 
     log << SLevel(INFO) << "Initialized DBInterface with url : " << URL_OF_DATABASE << "." << endl;
+
 }
 
 /**
@@ -87,6 +91,11 @@ bool DBInterface::readStatusOK() {
  */
 bool DBInterface::getDBFailure() {
     return dbFailure;
+}
+
+void DBInterface::createIfNotCreatedDataBase() {
+    HTTPRequest request;
+    request.post(URL_OF_DATABASE + "/query?q=create+database+"+NAME_OF_DATBASE+"&db=_internal");
 }
 
 
