@@ -23,7 +23,7 @@ int main() {
 
     //try dbinterface
     DBInterface& dbi = DBInterface::getInstance();
-    dbi.init("hallo.com");
+    dbi.init();
     dbi.writeToDataBase(dataBuffer);
     dataBuffer = dbi.readFromDataBase(dataBuffer);
     cout << "dataBuffer content " << dataBuffer << endl;

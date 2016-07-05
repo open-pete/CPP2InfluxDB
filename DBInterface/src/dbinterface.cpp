@@ -10,17 +10,13 @@
 
 /**
  * DBInterface::init
- * @brief sets the url of the database and creates a LogWriter-object
- * @param url_ url of the database
+ * @brief creates a LogWriter-object
  */
-void DBInterface::init(const string& url_) {
-    // set url of database
-    url = url_;
-
+void DBInterface::init() {
     // create LogWriter-object
-    log = LogWriter("DBInterface", pathOfLogFile);
+    log = LogWriter("DBInterface", PATH_OF_LOGFILE);
 
-    log << SLevel(INFO) << "Initialized DBInterface with url :" << url << "." << endl;
+    log << SLevel(INFO) << "Initialized DBInterface with url : " << URL_OF_DATABASE << "." << endl;
 }
 
 /**

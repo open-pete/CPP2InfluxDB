@@ -10,7 +10,7 @@
 #define CONFIG_H
 
 // constants
-const string urlOfDataBase = "test.com";
-const string pathOfLogFile = "LogFile.txt";
+const string URL_OF_DATABASE = "http://localhost:8086";
+const string PATH_OF_LOGFILE = "LogFile.txt";
 
 #endif // CONFIG_H

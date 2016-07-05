@@ -30,7 +30,7 @@ class DBInterface {
         ~DBInterface() {}
 
         /* --- interfacing the database --- */
-        void       init             (const string&     url_       );
+        void       init             ();
         void       writeToDataBase  (const DataBuffer& dataBuffer_);
         DataBuffer readFromDataBase (const DataBuffer& dataBuffer_);
         void       writeStatusOK    (      bool        statusOK_  );
@@ -46,7 +46,6 @@ class DBInterface {
         DBInterface& operator= (const DBInterface& dbInterface_); // must be private to avoid creating an new DBInterface-instance by copying
 
         /* --- interfacing the database --- */
-        string url;
         bool dbFailure = false;
         LogWriter log;
 };
