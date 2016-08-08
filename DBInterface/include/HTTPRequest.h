@@ -1,6 +1,16 @@
 #ifndef HTTPREQUEST_H
 #define HTTPREQUEST_H
 
+#include <QCoreApplication>
+#include <QDebug>
+#include <QNetworkAccessManager>
+#include <QNetworkRequest>
+#include <QNetworkReply>
+#include <QUrl>
+#include <QUrlQuery>
+
+#include <string.h>
+
 #include <stdlib.h>                  // system, NULL, EXIT_FAILURE
 #include "logwriter.h"
 #include "config.h"
@@ -14,7 +24,7 @@ class HTTPRequest{
     public:
         HTTPRequest();
         bool post(const string& url_);
-        bool get (const string& url_);
+        bool get (const QString url_);
     private:
         LogWriter log;
 };

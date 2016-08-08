@@ -29,7 +29,37 @@ bool HTTPRequest::post(const string &url_) {
 
 }
 
-bool HTTPRequest::get(const string &url_) {
-    // curl -G 'http://localhost:8086/query?pretty=true' --data-urlencode "db=mydb" --data-urlencode "q=SELECT value FROM cpu_load_short WHERE region='us-west'"
-    return true;
+/**
+ * HTTPRequest::get
+ * @brief executes a http-get-request for the given url
+ * @param url_ the URL which is requested
+ * @return returns true if request executed successfully, otherwise false
+ */
+bool HTTPRequest::get(const QString url_) {
+    // create custom temporary event loop on stack
+    QEventLoop eventLoop;
+
+    // "quit()" the event-loop, when the network request "finished()"
+    QNetworkAccessManager mgr;
+    QObject::connect(&mgr, SIGNAL(finished(QNetworkReply*)), &eventLoop, SLOT(quit()));
+
+    // the HTTP request
+    QUrl url = QUrl( url_ );             // create url
+    QNetworkRequest req( url );          // create network request
+    QNetworkReply *reply = mgr.get(req); // get reply
+    eventLoop.exec(); // blocks stack until "finished()" has been called
+
+    if (reply->error() == QNetworkReply::NoError) {
+        //success
+        qDebug() << "Success" <<reply->readAll();
+        //reply->pos()
+        delete reply;
+        return true;
+    }
+    else {
+        //failure
+        qDebug() << "Failure" <<reply->errorString();
+        delete reply;
+        return false;
+    }
 }
