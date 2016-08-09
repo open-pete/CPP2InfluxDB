@@ -15,6 +15,8 @@ CONFIG   += c++11
 
 TEMPLATE = app
 
+INCLUDEPATH += include/
+
 
 SOURCES += main.cpp \
     src/DataBuffer.cpp \
@@ -29,6 +31,7 @@ HEADERS += \
     include/dbinterface.h \
     include/logwriter.h \
     include/slevel.h \
-    include/HTTPRequest.h
+    include/HTTPRequest.h \
+    include/catch.hpp
 
 LIBS += -lcurl

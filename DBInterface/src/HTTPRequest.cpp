@@ -38,7 +38,7 @@ bool HTTPRequest::post(const string &url_, const string &postFields_) {
         // Check for errors
         if(res != CURLE_OK) {
             log << SLevel(ERROR) << "Aborted http-post-request, because " <<
-                   "curl_easy_perform() failed with" << curl_easy_strerror(res) << endl;
+                   "curl_easy_perform() failed with " << curl_easy_strerror(res) << endl;
             noError = false;
         }
 
@@ -88,15 +88,18 @@ string HTTPRequest::get(const string &url_) {
         curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, writeCallback);
         // set text buffer for answer
         curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
+        // detect 404 errors
+        curl_easy_setopt(curl, CURLOPT_FAILONERROR, true);
         // perform request
         res = curl_easy_perform(curl);
 
         // check for errors
         if(res != CURLE_OK) {
             log << SLevel(ERROR) << "Aborted http-get-request, because " <<
-                   "curl_easy_perform() failed with" << curl_easy_strerror(res) << endl;
+                   "curl_easy_perform() failed with " << curl_easy_strerror(res) << endl;
             return "";
         }
+
 
         // clean up
         curl_easy_cleanup(curl);
