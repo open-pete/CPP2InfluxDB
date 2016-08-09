@@ -1,18 +1,12 @@
 #ifndef HTTPREQUEST_H
 #define HTTPREQUEST_H
 
-#include <QCoreApplication>
-#include <QDebug>
-#include <QNetworkAccessManager>
-#include <QNetworkRequest>
-#include <QNetworkReply>
-#include <QUrl>
-#include <QUrlQuery>
-#include <iostream>
-
-#include <string.h>
-
 #include <stdlib.h>                  // system, NULL, EXIT_FAILURE
+
+// --
+#include <curl/curl.h>
+#include <iostream>
+// ---
 #include "logwriter.h"
 #include "config.h"
 
@@ -28,6 +22,10 @@ class HTTPRequest{
         string get(const string& url_);
     private:
         LogWriter log;
+
 };
+
+/* static callback function for libcurl */
+static size_t WriteCallback(void *contents_, size_t size_, size_t nmemb_, void *userp_);
 
 #endif // HTTPREQUEST_H

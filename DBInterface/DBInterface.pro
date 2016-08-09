@@ -30,3 +30,5 @@ HEADERS += \
     include/logwriter.h \
     include/slevel.h \
     include/HTTPRequest.h
+
+LIBS += -lcurl

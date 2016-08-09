@@ -30,34 +30,38 @@ bool HTTPRequest::post(const string &url_) {
 }
 
 /**
+ * WriteCallback
+ * @brief static callback function for libcurl
+ * @param contents_ data to write
+ * @param size_ size of datatype
+ * @param nmemb number of of members with the size 'size_'
+ * @param userp user pointer
+ * @return returns size of written data (size_ * nmemb_)
+ */
+static size_t WriteCallback(void *contents_, size_t size_, size_t nmemb_, void *userp_) {
+    ((string*)userp_)->append((char*)contents_, size_ * nmemb_);
+    return size_ * nmemb_;
+}
+
+/**
  * HTTPRequest::get
  * @brief executes a http-get-request for the given url
  * @param url_ the URL which is requested
- * @return returns answer of http request as QString
+ * @return returns answer of http request as string
  */
-QString HTTPRequest::get(const QString url_) {
-    // create custom temporary event loop on stack
-    //QEventLoop eventLoop;
+string HTTPRequest::get(const string &url_) {
+    CURL *curl;
+    CURLcode res;
+    string readBuffer;
 
-    // "quit()" the event-loop, when the network request "finished()"
-    QNetworkAccessManager mgr;
-    //QObject::connect(&mgr, SIGNAL(finished(QNetworkReply*)), &eventLoop, SLOT(quit()));
+    curl = curl_easy_init();
+    if(curl) {
+      curl_easy_setopt(curl, CURLOPT_URL, url_.c_str());
+      curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
+      curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
+      res = curl_easy_perform(curl);
+      curl_easy_cleanup(curl);
 
-    // the HTTP request
-    QUrl url = QUrl( url_ );             // create url
-    QNetworkRequest req( url );          // create network request
-    QNetworkReply *reply = mgr.get(req); // get reply
-    while (!reply->isFinished());
-    //eventLoop.exec(); // blocks stack until "finished()" has been called
-
-    if (reply->error() == QNetworkReply::NoError) {
-        QString temp(reply->readAll());
-        delete reply;
-        return temp;
-    } else {
-        //failure
-        qDebug() << "Failure" <<reply->errorString();
-        delete reply;
-        return QString("");
+      return readBuffer;
     }
 }

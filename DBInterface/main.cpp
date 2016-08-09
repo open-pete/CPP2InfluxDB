@@ -5,9 +5,7 @@
 
 using namespace std;
 
-int main(int argc, char *argv[]) {
-    QCoreApplication a(argc, argv);
-
+int main() {
 
     DataBuffer dataBuffer;
 
@@ -39,10 +37,10 @@ int main(int argc, char *argv[]) {
     //req.post("http://localhost:8086/write?db=test3' --data-binary 'forecast,datatype=temperature value=50");
     //req.post("http://localhost:8086/query?q=create+database+test400&db=_internal");
     //req.get("http://localhost:8086/query?pretty=true&db=test3&q=SELECT+*+FROM+forecast");
-    QString answer = req.get("http://localhost:8086/query?pretty=true&db=WeatherData&q=SELECT Lufttemperatur_2m FROM point where DataSource = 'Forecast' and time = '2015-08-18T23:00:00.00000000Z' %2B 1000h");
-    cout << answer.toStdString();
+    string answer = req.get("http://localhost:8086/query?pretty=true&db=WeatherData&q=SELECT+Lufttemperatur_2m+FROM+point+where+DataSource+=+'Forecast'+and+time+=+'2015-08-18T23:00:00.00000000Z'+%2B+1000h");
+    cout << answer;
     //req.get("http://api.openweathermap.org/data/2.5/weather?lat=52.9&lon=9.2&APPID=08854a5d6fe0754f2670f5fa5127a831");
 
-    return a.exec();
+    return 0 ;
 }
 
