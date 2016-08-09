@@ -28,11 +28,35 @@ void DBInterface::init() {
  * @brief writeToDataBase writes content of dataBuffer_ to database
  * @param dataBuffer_ data which is written to database
  */
-void DBInterface::writeToDataBase(const DataBuffer& dataBuffer_) {
+void DBInterface::writeToDataBase(DataBuffer& dataBuffer_) {
     if (readStatusOK()) {
-        // --- TODO -- dummy code ---
-        cout << "written to database : " << dataBuffer_ << endl;
-        // --- TODO -- dummy code ---
+
+        stringstream httpRequestUrl;
+        //http://localhost:8086/write?db=WeatherData2
+
+        httpRequestUrl << URL_OF_DATABASE << "/write?db=" << NAME_OF_DATBASE;
+        stringstream httpRequestPostFields;
+        if (!dataBuffer_.useDataSource) {
+            log << SLevel(ERROR) << "Aborted writing to database because there was either no DataSource specified";
+            log << " or the useDataSource-flag was not set to true." << endl;
+        } else {
+            httpRequestPostFields << "point,DataSource=" << dataBuffer_.dataSource << " ";
+
+            bool printComma = false;
+            typedef std::map<string, double>::iterator it_type;
+            for(it_type iterator = dataBuffer_.data.begin(); iterator != dataBuffer_.data.end(); iterator++) {
+                if (printComma) {
+                    httpRequestPostFields << ",";
+                } else {
+                    printComma = true;
+                }
+                string name = cleanString(iterator->first);
+                double value = iterator->second;
+                httpRequestPostFields << name << "=" << value;
+            }
+            HTTPRequest req;
+            req.post(httpRequestUrl.str(),httpRequestPostFields.str());
+        }
     } else {
         log << SLevel(ERROR) << "Aborted writing to database because of status not OK" << endl;
     }
@@ -80,7 +104,7 @@ void DBInterface::writeStatusOK(bool statusOK_) {
 bool DBInterface::readStatusOK() {
     // --- TODO -- dummy code ---
     cout << "read statusOK" << endl;
-    return rand() % 1;
+    return 1;//rand() % 1;
     // --- TODO -- dummy code ---
 }
 
@@ -100,6 +124,25 @@ bool DBInterface::getDBFailure() {
 void DBInterface::createIfNotCreatedDataBase() {
     HTTPRequest request;
     request.post(URL_OF_DATABASE + "/query?q=create+database+"+NAME_OF_DATBASE+"&db=_internal","");
+}
+
+/**
+ * DBInterface::cleanString
+ * @brief removes every char that is not an alphabetic character, a number or '_'
+ * @param stringToClean_ the string to clean
+ * @return returns stringToClean_ without anything but character, numbers and '_'
+ */
+string DBInterface::cleanString(const string &stringToClean_) {
+    string result = stringToClean_;
+    // remove everythin that not is not alphanum and that is not _
+    result.erase(
+                  remove_if( result.begin(), result.end(),
+                             [](char c) { return !(isalnum(c) || (c == '_') ) ; }
+                           ),
+                  result.end()
+                );
+
+    return result;
 }
 
 

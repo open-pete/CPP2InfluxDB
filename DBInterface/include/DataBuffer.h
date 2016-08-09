@@ -30,6 +30,10 @@ struct DataBuffer{
     struct tm startDateTime;
     struct tm endDateTime;
 
+    // data-source
+    string dataSource;
+    bool useDataSource = false;
+
     // data - content
     map<string,double> data;
 

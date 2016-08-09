@@ -58,3 +58,30 @@ TEST_CASE( "HTTPRequest.get works") {
     }
 
 }
+
+TEST_CASE("DBInterface, write/read to/from database, getDBFailure") {
+    DataBuffer dataBuffer;
+
+    DBInterface& dbi = DBInterface::getInstance();
+    dbi.init();
+
+    SECTION ("write / read valid databuffer") {
+        dataBuffer.startDateTime.tm_sec  = 0;    // seconds
+        dataBuffer.startDateTime.tm_min  = 15;   // minutes
+        dataBuffer.startDateTime.tm_hour = 23;   // hours (0 to 23)
+        dataBuffer.startDateTime.tm_mday = 24;   // day (1 bis 31)
+        dataBuffer.startDateTime.tm_mon  = 8-1; // month (0 bis 11)
+        dataBuffer.startDateTime.tm_year = 2016-1900; // Year (calender-year minus 1900)
+
+        dataBuffer.dataSource = "Forecast";
+        dataBuffer.useDataSource = true;
+
+        dataBuffer.data["Te_ mp6erat%ure"] = 4.5;
+        dataBuffer.data["AirPressure"] = 1021;
+        dbi.writeToDataBase(dataBuffer);
+    }
+
+
+
+
+}

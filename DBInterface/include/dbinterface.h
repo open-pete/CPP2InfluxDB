@@ -9,6 +9,9 @@
 #ifndef DBINTERFACE_H
 #define DBINTERFACE_H
 
+#include <sstream>
+#include <algorithm>
+// ---
 #include "DataBuffer.h"
 #include "config.h"
 #include "logwriter.h"
@@ -32,7 +35,7 @@ class DBInterface {
 
         /* --- interfacing the database --- */
         void       init             ();
-        void       writeToDataBase  (const DataBuffer& dataBuffer_);
+        void       writeToDataBase  (DataBuffer &dataBuffer_);
         DataBuffer readFromDataBase (const DataBuffer& dataBuffer_);
         void       writeStatusOK    (      bool        statusOK_  );
         bool       readStatusOK     ();
@@ -50,6 +53,9 @@ class DBInterface {
         void createIfNotCreatedDataBase();
         bool dbFailure = false;
         LogWriter log;
+
+        /* --- remove special characters from string --- */
+        string cleanString(const string& stringToClean_);
 };
 
 #endif // DBINTERFACE_H
