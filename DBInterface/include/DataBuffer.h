@@ -13,6 +13,7 @@
 #include <map>
 #include <string>
 #include <iostream>
+#include <time.h>
 
 using namespace std;
 
@@ -24,7 +25,12 @@ using namespace std;
  * which can be used by two software modules to exchange data.
  */
 struct DataBuffer{
+    // dateTimes;
+    bool useDateTimes = false;
+    struct tm startDateTime;
+    struct tm endDateTime;
 
+    // data - content
     map<string,double> data;
 
     // operators

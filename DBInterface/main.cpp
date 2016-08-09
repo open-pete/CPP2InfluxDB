@@ -2,6 +2,7 @@
 #include "include/DataBuffer.h"
 #include "include/dbinterface.h"
 #include "include/HTTPRequest.h"
+#include <boost/date_time/gregorian/gregorian.hpp>
 
 using namespace std;
 
@@ -37,9 +38,11 @@ int main() {
     req.post("http://localhost:8086/write?db=test3","forecast,datatype=temperature value=50");
     //req.post("http://localhost:8086/query?q=create+database+test400&db=_internal");
     //req.get("http://localhost:8086/query?pretty=true&db=test3&q=SELECT+*+FROM+forecast");
-    string answer = req.get("http://localhost:8086/query?pretty=true&db=WeatherData&q=SELECT+Lufttemperatur_2m+FROM+point+where+DataSource+=+'Forecast'+and+time+=+'2015-08-18T23:00:00.00000000Z'+%2B+1000h");
+    //string answer = req.get("http://localhost:8086/query?pretty=true&db=WeatherData&q=SELECT+Lufttemperatur_2m+FROM+point+where+DataSource+=+'Forecast'+and+time+=+'2015-08-18T23:00:00.00000000Z'+%2B+1000h");
+    string answer = req.get("http://localhost:8086/query?pretty=true&db=WeatherData&q=SELECT+Lufttemperatur_2m+FROM+point");
     cout << answer;
     //req.get("http://api.openweathermap.org/data/2.5/weather?lat=52.9&lon=9.2&APPID=08854a5d6fe0754f2670f5fa5127a831");
+
 
     return 0 ;
 }
