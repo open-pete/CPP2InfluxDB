@@ -33,33 +33,31 @@ bool HTTPRequest::post(const string &url_) {
  * HTTPRequest::get
  * @brief executes a http-get-request for the given url
  * @param url_ the URL which is requested
- * @return returns true if request executed successfully, otherwise false
+ * @return returns answer of http request as QString
  */
-bool HTTPRequest::get(const QString url_) {
+QString HTTPRequest::get(const QString url_) {
     // create custom temporary event loop on stack
-    QEventLoop eventLoop;
+    //QEventLoop eventLoop;
 
     // "quit()" the event-loop, when the network request "finished()"
     QNetworkAccessManager mgr;
-    QObject::connect(&mgr, SIGNAL(finished(QNetworkReply*)), &eventLoop, SLOT(quit()));
+    //QObject::connect(&mgr, SIGNAL(finished(QNetworkReply*)), &eventLoop, SLOT(quit()));
 
     // the HTTP request
     QUrl url = QUrl( url_ );             // create url
     QNetworkRequest req( url );          // create network request
     QNetworkReply *reply = mgr.get(req); // get reply
-    eventLoop.exec(); // blocks stack until "finished()" has been called
+    while (!reply->isFinished());
+    //eventLoop.exec(); // blocks stack until "finished()" has been called
 
     if (reply->error() == QNetworkReply::NoError) {
-        //success
-        qDebug() << "Success" <<reply->readAll();
-        //reply->pos()
+        QString temp(reply->readAll());
         delete reply;
-        return true;
-    }
-    else {
+        return temp;
+    } else {
         //failure
         qDebug() << "Failure" <<reply->errorString();
         delete reply;
-        return false;
+        return QString("");
     }
 }

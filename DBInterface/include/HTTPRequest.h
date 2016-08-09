@@ -8,6 +8,7 @@
 #include <QNetworkReply>
 #include <QUrl>
 #include <QUrlQuery>
+#include <iostream>
 
 #include <string.h>
 
@@ -24,7 +25,7 @@ class HTTPRequest{
     public:
         HTTPRequest();
         bool post(const string& url_);
-        bool get (const QString url_);
+        string get(const string& url_);
     private:
         LogWriter log;
 };
