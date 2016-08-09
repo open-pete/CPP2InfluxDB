@@ -126,3 +126,6 @@
 09/08/16-14:23:05 - ERROR     - DBInterface - Aborted writing to database because of status not OK09/08/16-14:23:05 - ERROR     - DBInterface - Aborted reading from database because of status not OK
 09/08/16-14:41:37 - INFO      - DBInterface - Initialized DBInterface with url : http://localhost:8086.
 09/08/16-14:41:37 - ERROR     - DBInterface - Aborted writing to database because of status not OK09/08/16-14:41:37 - ERROR     - DBInterface - Aborted reading from database because of status not OK
+09/08/16-14:55:30 - INFO      - DBInterface - Initialized DBInterface with url : http://localhost:8086.
+09/08/16-14:55:30 - ERROR     - DBInterface - Aborted writing to database because of status not OK
+09/08/16-14:55:30 - ERROR     - DBInterface - Aborted reading from database because of status not OK

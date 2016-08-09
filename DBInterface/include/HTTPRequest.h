@@ -1,9 +1,6 @@
 #ifndef HTTPREQUEST_H
 #define HTTPREQUEST_H
 
-#include <stdlib.h>                  // system, NULL, EXIT_FAILURE
-
-// --
 #include <curl/curl.h>
 #include <iostream>
 // ---
@@ -24,8 +21,5 @@ class HTTPRequest{
         LogWriter log;
 
 };
-
-/* static callback function for libcurl */
-static size_t WriteCallback(void *contents_, size_t size_, size_t nmemb_, void *userp_);
 
 #endif // HTTPREQUEST_H

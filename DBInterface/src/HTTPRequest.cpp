@@ -63,7 +63,7 @@ bool HTTPRequest::post(const string &url_, const string &postFields_) {
  * @param userp user pointer
  * @return returns size of written data (size_ * nmemb_)
  */
-static size_t WriteCallback(void *contents_, size_t size_, size_t nmemb_, void *userp_) {
+static size_t writeCallback(void *contents_, size_t size_, size_t nmemb_, void *userp_) {
     ((string*)userp_)->append((char*)contents_, size_ * nmemb_);
     return size_ * nmemb_;
 }
@@ -85,7 +85,7 @@ string HTTPRequest::get(const string &url_) {
         // Set the URL that is about to receive our POST
         curl_easy_setopt(curl, CURLOPT_URL, url_.c_str());
         // set callback function
-        curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
+        curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, writeCallback);
         // set text buffer for answer
         curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
         // perform request

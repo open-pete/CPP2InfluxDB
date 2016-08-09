@@ -34,7 +34,7 @@ void DBInterface::writeToDataBase(const DataBuffer& dataBuffer_) {
         cout << "written to database : " << dataBuffer_ << endl;
         // --- TODO -- dummy code ---
     } else {
-        log << SLevel(ERROR) << "Aborted writing to database because of status not OK";
+        log << SLevel(ERROR) << "Aborted writing to database because of status not OK" << endl;
     }
 }
 
@@ -93,6 +93,10 @@ bool DBInterface::getDBFailure() {
     return dbFailure;
 }
 
+/**
+ * DBInterface::createIfNotCreatedDataBase
+ * @brief creates database defined by NAME_OF_DATBASE in config.h if not already created
+ */
 void DBInterface::createIfNotCreatedDataBase() {
     HTTPRequest request;
     request.post(URL_OF_DATABASE + "/query?q=create+database+"+NAME_OF_DATBASE+"&db=_internal","");
