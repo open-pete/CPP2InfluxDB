@@ -95,7 +95,7 @@ bool DBInterface::getDBFailure() {
 
 void DBInterface::createIfNotCreatedDataBase() {
     HTTPRequest request;
-    request.post(URL_OF_DATABASE + "/query?q=create+database+"+NAME_OF_DATBASE+"&db=_internal");
+    request.post(URL_OF_DATABASE + "/query?q=create+database+"+NAME_OF_DATBASE+"&db=_internal","");
 }
 
 

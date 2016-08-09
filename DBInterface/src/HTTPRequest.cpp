@@ -17,16 +17,41 @@ HTTPRequest::HTTPRequest() {
  * @param url_ the URL which is requested
  * @return returns true if request executed successfully, otherwise false
  */
-bool HTTPRequest::post(const string &url_) {
-    if (system(NULL)) {                                    // Checking if command - processor is available
-        string command = "curl -i -XPOST '" + url_ + "'";  // build command-string
-        int statusCode = system (command.c_str());         // execute command
-        return true;
-    } else {
-        log << SLevel(ERROR) <<  "Unable to make http-post-request, command proccessor is not available" << endl;
-        return false;
-    }
+bool HTTPRequest::post(const string &url_, const string &postFields_) {
+    bool noError = true;
+    CURL *curl;
+    CURLcode res;
 
+    // In windows, this will init the winsock stuff
+    curl_global_init(CURL_GLOBAL_ALL);
+
+    // get a curl handle
+    curl = curl_easy_init();
+    if(curl) {
+        // Set the URL that is about to receive our POST
+        curl_easy_setopt(curl, CURLOPT_URL, url_.c_str());
+        // Specify the POST data
+        curl_easy_setopt(curl, CURLOPT_POSTFIELDS, postFields_.c_str());
+
+        // Perform the request, res will get the return code
+        res = curl_easy_perform(curl);
+        // Check for errors
+        if(res != CURLE_OK) {
+            log << SLevel(ERROR) << "Aborted http-post-request, because " <<
+                   "curl_easy_perform() failed with" << curl_easy_strerror(res) << endl;
+            noError = false;
+        }
+
+        // cleanup
+        curl_easy_cleanup(curl);
+    } else {
+        log << SLevel(ERROR) << "Aborted http-post-request, because it was not " <<
+               "possible to get a curl handle by using curl_easy_init" << endl;
+        noError = false;
+
+    }
+    curl_global_cleanup();
+    return noError;
 }
 
 /**
@@ -54,14 +79,35 @@ string HTTPRequest::get(const string &url_) {
     CURLcode res;
     string readBuffer;
 
+    // get a curl handle
     curl = curl_easy_init();
     if(curl) {
-      curl_easy_setopt(curl, CURLOPT_URL, url_.c_str());
-      curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
-      curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
-      res = curl_easy_perform(curl);
-      curl_easy_cleanup(curl);
+        // Set the URL that is about to receive our POST
+        curl_easy_setopt(curl, CURLOPT_URL, url_.c_str());
+        // set callback function
+        curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
+        // set text buffer for answer
+        curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
+        // perform request
+        res = curl_easy_perform(curl);
 
-      return readBuffer;
+        // check for errors
+        if(res != CURLE_OK) {
+            log << SLevel(ERROR) << "Aborted http-get-request, because " <<
+                   "curl_easy_perform() failed with" << curl_easy_strerror(res) << endl;
+            return "";
+        }
+
+        // clean up
+        curl_easy_cleanup(curl);
+        curl_global_cleanup();
+
+        // return answer of request as string
+        return readBuffer;
+
+    } else {
+        log << SLevel(ERROR) << "Aborted http-post-request, because it was not " <<
+               "possible to get a curl handle by using curl_easy_init" << endl;
+        return "";
     }
 }

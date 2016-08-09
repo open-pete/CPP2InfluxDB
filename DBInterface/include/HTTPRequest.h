@@ -18,7 +18,7 @@
 class HTTPRequest{
     public:
         HTTPRequest();
-        bool post(const string& url_);
+        bool post(const string& url_, const string& postFields_);
         string get(const string& url_);
     private:
         LogWriter log;

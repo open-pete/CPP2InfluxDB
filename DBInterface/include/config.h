@@ -11,7 +11,7 @@
 
 // constants
 const string URL_OF_DATABASE = "http://localhost:8086";
-const string NAME_OF_DATBASE = "WeatherData";
+const string NAME_OF_DATBASE = "WeatherData2";
 const string PATH_OF_LOGFILE = "LogFile.txt";
 
 #endif // CONFIG_H
