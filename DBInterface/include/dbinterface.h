@@ -60,6 +60,7 @@ class DBInterface {
 
         /* --- interfacing the database --- */
         void createIfNotCreatedDataBase();
+        void setDBFailure(bool val_) {dbFailure = val_;} ;
         bool dbFailure = false;
         LogWriter log;
 

@@ -60,7 +60,8 @@ void DBInterface::writeToDataBase(DataBuffer& dataBuffer_) {
                 httpRequestPostFields << " " << startDateTime;
             }
             HTTPRequest req;
-            req.post(httpRequestUrl.str(),httpRequestPostFields.str());
+            bool noFailure = req.post(httpRequestUrl.str(),httpRequestPostFields.str());
+            setDBFailure(!noFailure);
         }
     } else {
         log << SLevel(ERROR) << "Aborted writing to database because of status not OK" << endl;
@@ -115,6 +116,7 @@ vector<DataBuffer> DBInterface::readFromDataBase(DataBuffer& dataBuffer_) {
             // execute request
             HTTPRequest req;
             string answerJSON = req.get(httpRequestUrl.str());
+            setDBFailure(answerJSON == "");
 
             // convert json to vector of DataBuffer
             result = jsonToDataBufferVector(answerJSON,dataBuffer_.dataSource);
@@ -261,11 +263,11 @@ string DBInterface::cTimeToString(tm datetime_, bool inUnixTime_) {
  * NOTICE : only the tm-fields tm_year, tm_mon, tm_mday, tm_hour, tm_min, tm_sec are supported
  *          the other fields are ALWAYS set to :
  *
- *              tm_wday = 0;
- *              tm_yday = 0;
- *              tm_zone = "";
+ *              tm_wday   = 0;
+ *              tm_yday   = 0;
+ *              tm_zone   = "";
  *              tm_gmtoff = 0;
- *              tm_isdst = 1;
+ *              tm_isdst  = 0;
  */
 tm DBInterface::stringToCTime(const string &dateTimeString_) {
     //2016-08-09T16:40:57Z
@@ -297,11 +299,11 @@ tm DBInterface::stringToCTime(const string &dateTimeString_) {
     result.tm_sec = stoi(substring);
 
     // set unused tm_fields
-    result.tm_wday = 0;
-    result.tm_yday = 0;
-    result.tm_zone = "";
+    result.tm_wday   = 0;
+    result.tm_yday   = 0;
+    result.tm_zone   = "";
     result.tm_gmtoff = 0;
-    result.tm_isdst = 1;
+    result.tm_isdst  = 0;
 
     return result;
 }

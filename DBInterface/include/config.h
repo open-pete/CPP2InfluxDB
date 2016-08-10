@@ -9,6 +9,10 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
+#include <string>
+
+using namespace std;
+
 // constants
 const string URL_OF_DATABASE = "http://localhost:8086";
 const string NAME_OF_DATBASE = "WeatherData2";

@@ -2,8 +2,6 @@
 #include "catch.hpp"
 #include "dbinterface.h"
 
-
-
 TEST_CASE( "HTTPRequest.post works") {
     HTTPRequest req;
     string url;
@@ -12,12 +10,6 @@ TEST_CASE( "HTTPRequest.post works") {
     SECTION("both parameters valid") {
         url = "http://localhost:8086/write?db=test3";
         postFields = "forecast,datatype=temperature value=50";
-        REQUIRE(req.post(url,postFields));
-    }
-
-    SECTION("TODO") {
-        url = "http://localhost:8086/write?db=WeatherData2";
-        postFields = "forecast,datatype=temperature value=5345 1472073300000000000";
         REQUIRE(req.post(url,postFields));
     }
 
@@ -65,7 +57,8 @@ TEST_CASE( "HTTPRequest.get works") {
 
 }
 
-TEST_CASE("DBInterface, write/rewad to/from database, getDBFailure") {
+
+TEST_CASE("DBInterface, write/read to/from database, getDBFailure") {
     DataBuffer dataBuffer, dataBuffer2;
 
     DBInterface& dbi = DBInterface::getInstance();
@@ -86,18 +79,47 @@ TEST_CASE("DBInterface, write/rewad to/from database, getDBFailure") {
         dataBuffer.dataSource = "Forecast";
         dataBuffer.useDataSource = true;
 
-        dataBuffer.data["Temperature"] = 4.5;
-        dataBuffer.data["AirPressure"] = 1200;
+        dataBuffer.data["Lufttemperatur_2m"] = 14.5;
+        dataBuffer.data["RelativeLuftfeuchte_2m"] = 1200;
         dbi.writeToDataBase(dataBuffer);
 
         dataBuffer2 = dataBuffer;
-        dataBuffer2.data["Temperature"] = 0;
-        dataBuffer2.data["AirPressure"] = 0;
+        dataBuffer2.data["Lufttemperatur_2m"] = 0;
+        dataBuffer2.data["RelativeLuftfeuchte_2m"] = 0;
         vector<DataBuffer> dataBufferVec = dbi.readFromDataBase(dataBuffer2);
         REQUIRE(dataBufferVec[0] == dataBuffer);
+        REQUIRE(dbi.getDBFailure() == false);
     }
 
+    /*
+    SECTION ("write / read date = 1970") {
+        //2015-06-11T20:46:02
+        dataBuffer.startDateTime.tm_sec  = 0;    // seconds
+        dataBuffer.startDateTime.tm_min  = 0;   // minutes
+        dataBuffer.startDateTime.tm_hour = 1;   // hours
+        dataBuffer.startDateTime.tm_mday = 1;   // day
+        dataBuffer.startDateTime.tm_mon  = 1;    // month
+        dataBuffer.startDateTime.tm_year = 1971; // Year
 
+        dataBuffer.endDateTime = dataBuffer.startDateTime;
+        dataBuffer.useDateTimes = true;
+
+        dataBuffer.dataSource = "Forecast";
+        dataBuffer.useDataSource = true;
+
+        dataBuffer.data["Lufttemperatur_2m"] = 14.5;
+        dataBuffer.data["RelativeLuftfeuchte_2m"] = 1200;
+        dbi.writeToDataBase(dataBuffer);
+
+        dataBuffer2 = dataBuffer;
+        dataBuffer2.data["Lufttemperatur_2m"] = 0;
+        dataBuffer2.data["RelativeLuftfeuchte_2m"] = 0;
+        vector<DataBuffer> dataBufferVec = dbi.readFromDataBase(dataBuffer2);
+        REQUIRE(dataBufferVec[0] == dataBuffer);
+        REQUIRE(dbi.getDBFailure() == false);
+    }
+
+*/
 
 
 }

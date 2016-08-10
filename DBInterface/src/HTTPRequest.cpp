@@ -32,6 +32,8 @@ bool HTTPRequest::post(const string &url_, const string &postFields_) {
         curl_easy_setopt(curl, CURLOPT_URL, url_.c_str());
         // Specify the POST data
         curl_easy_setopt(curl, CURLOPT_POSTFIELDS, postFields_.c_str());
+        // detect 404 errors
+        curl_easy_setopt(curl, CURLOPT_FAILONERROR, true);
 
         // Perform the request, res will get the return code
         res = curl_easy_perform(curl);
