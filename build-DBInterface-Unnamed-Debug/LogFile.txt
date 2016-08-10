@@ -559,3 +559,128 @@
 10/08/16-07:18:36 - ERROR     - HTTPRequest - Aborted http-get-request, because curl_easy_perform() failed with HTTP response code said error
 10/08/16-07:18:36 - ERROR     - HTTPRequest - Aborted http-get-request, because curl_easy_perform() failed with URL using bad/illegal format or missing URL
 10/08/16-07:18:36 - INFO      - DBInterface - Initialized DBInterface with url : http://localhost:8086.
+10/08/16-07:45:21 - ERROR     - HTTPRequest - Aborted http-post-request, because curl_easy_perform() failed with Couldn't connect to server
+10/08/16-07:45:21 - ERROR     - HTTPRequest - Aborted http-post-request, because curl_easy_perform() failed with URL using bad/illegal format or missing URL
+10/08/16-07:45:21 - ERROR     - HTTPRequest - Aborted http-get-request, because curl_easy_perform() failed with HTTP response code said error
+10/08/16-07:45:21 - ERROR     - HTTPRequest - Aborted http-get-request, because curl_easy_perform() failed with URL using bad/illegal format or missing URL
+10/08/16-07:45:21 - INFO      - DBInterface - Initialized DBInterface with url : http://localhost:8086.
+10/08/16-07:53:49 - ERROR     - HTTPRequest - Aborted http-post-request, because curl_easy_perform() failed with Couldn't connect to server
+10/08/16-07:53:49 - ERROR     - HTTPRequest - Aborted http-post-request, because curl_easy_perform() failed with URL using bad/illegal format or missing URL
+10/08/16-07:53:50 - ERROR     - HTTPRequest - Aborted http-get-request, because curl_easy_perform() failed with HTTP response code said error
+10/08/16-07:53:50 - ERROR     - HTTPRequest - Aborted http-get-request, because curl_easy_perform() failed with URL using bad/illegal format or missing URL
+10/08/16-07:53:50 - INFO      - DBInterface - Initialized DBInterface with url : http://localhost:8086.
+10/08/16-07:55:25 - ERROR     - HTTPRequest - Aborted http-post-request, because curl_easy_perform() failed with Couldn't connect to server
+10/08/16-07:55:25 - ERROR     - HTTPRequest - Aborted http-post-request, because curl_easy_perform() failed with URL using bad/illegal format or missing URL
+10/08/16-07:55:25 - ERROR     - HTTPRequest - Aborted http-get-request, because curl_easy_perform() failed with HTTP response code said error
+10/08/16-07:55:25 - ERROR     - HTTPRequest - Aborted http-get-request, because curl_easy_perform() failed with URL using bad/illegal format or missing URL
+10/08/16-07:55:25 - INFO      - DBInterface - Initialized DBInterface with url : http://localhost:8086.
+10/08/16-07:57:07 - ERROR     - HTTPRequest - Aborted http-post-request, because curl_easy_perform() failed with Couldn't connect to server
+10/08/16-07:57:07 - ERROR     - HTTPRequest - Aborted http-post-request, because curl_easy_perform() failed with URL using bad/illegal format or missing URL
+10/08/16-07:57:08 - ERROR     - HTTPRequest - Aborted http-get-request, because curl_easy_perform() failed with HTTP response code said error
+10/08/16-07:57:08 - ERROR     - HTTPRequest - Aborted http-get-request, because curl_easy_perform() failed with URL using bad/illegal format or missing URL
+10/08/16-07:57:08 - INFO      - DBInterface - Initialized DBInterface with url : http://localhost:8086.
+10/08/16-08:01:30 - ERROR     - HTTPRequest - Aborted http-post-request, because curl_easy_perform() failed with Couldn't connect to server
+10/08/16-08:01:30 - ERROR     - HTTPRequest - Aborted http-post-request, because curl_easy_perform() failed with URL using bad/illegal format or missing URL
+10/08/16-08:01:31 - ERROR     - HTTPRequest - Aborted http-get-request, because curl_easy_perform() failed with HTTP response code said error
+10/08/16-08:01:31 - ERROR     - HTTPRequest - Aborted http-get-request, because curl_easy_perform() failed with URL using bad/illegal format or missing URL
+10/08/16-08:01:31 - INFO      - DBInterface - Initialized DBInterface with url : http://localhost:8086.
+10/08/16-08:01:57 - ERROR     - HTTPRequest - Aborted http-post-request, because curl_easy_perform() failed with Couldn't connect to server
+10/08/16-08:01:57 - ERROR     - HTTPRequest - Aborted http-post-request, because curl_easy_perform() failed with URL using bad/illegal format or missing URL
+10/08/16-08:01:57 - ERROR     - HTTPRequest - Aborted http-get-request, because curl_easy_perform() failed with HTTP response code said error
+10/08/16-08:01:57 - ERROR     - HTTPRequest - Aborted http-get-request, because curl_easy_perform() failed with URL using bad/illegal format or missing URL
+10/08/16-08:01:57 - INFO      - DBInterface - Initialized DBInterface with url : http://localhost:8086.
+10/08/16-08:10:33 - ERROR     - HTTPRequest - Aborted http-post-request, because curl_easy_perform() failed with Couldn't connect to server
+10/08/16-08:10:33 - ERROR     - HTTPRequest - Aborted http-post-request, because curl_easy_perform() failed with URL using bad/illegal format or missing URL
+10/08/16-08:10:33 - ERROR     - HTTPRequest - Aborted http-get-request, because curl_easy_perform() failed with HTTP response code said error
+10/08/16-08:10:33 - ERROR     - HTTPRequest - Aborted http-get-request, because curl_easy_perform() failed with URL using bad/illegal format or missing URL
+10/08/16-08:10:33 - INFO      - DBInterface - Initialized DBInterface with url : http://localhost:8086.
+10/08/16-08:10:39 - ERROR     - HTTPRequest - Aborted http-post-request, because curl_easy_perform() failed with Couldn't connect to server
+10/08/16-08:10:39 - ERROR     - HTTPRequest - Aborted http-post-request, because curl_easy_perform() failed with URL using bad/illegal format or missing URL
+10/08/16-08:10:40 - ERROR     - HTTPRequest - Aborted http-get-request, because curl_easy_perform() failed with HTTP response code said error
+10/08/16-08:10:40 - ERROR     - HTTPRequest - Aborted http-get-request, because curl_easy_perform() failed with URL using bad/illegal format or missing URL
+10/08/16-08:10:40 - INFO      - DBInterface - Initialized DBInterface with url : http://localhost:8086.
+10/08/16-08:12:02 - ERROR     - HTTPRequest - Aborted http-post-request, because curl_easy_perform() failed with Couldn't connect to server
+10/08/16-08:12:02 - ERROR     - HTTPRequest - Aborted http-post-request, because curl_easy_perform() failed with URL using bad/illegal format or missing URL
+10/08/16-08:12:02 - ERROR     - HTTPRequest - Aborted http-get-request, because curl_easy_perform() failed with HTTP response code said error
+10/08/16-08:12:02 - ERROR     - HTTPRequest - Aborted http-get-request, because curl_easy_perform() failed with URL using bad/illegal format or missing URL
+10/08/16-08:12:02 - INFO      - DBInterface - Initialized DBInterface with url : http://localhost:8086.
+10/08/16-08:17:32 - ERROR     - HTTPRequest - Aborted http-post-request, because curl_easy_perform() failed with Couldn't connect to server
+10/08/16-08:17:32 - ERROR     - HTTPRequest - Aborted http-post-request, because curl_easy_perform() failed with URL using bad/illegal format or missing URL
+10/08/16-08:17:32 - ERROR     - HTTPRequest - Aborted http-get-request, because curl_easy_perform() failed with HTTP response code said error
+10/08/16-08:17:32 - ERROR     - HTTPRequest - Aborted http-get-request, because curl_easy_perform() failed with URL using bad/illegal format or missing URL
+10/08/16-08:17:32 - INFO      - DBInterface - Initialized DBInterface with url : http://localhost:8086.
+10/08/16-08:18:27 - ERROR     - HTTPRequest - Aborted http-post-request, because curl_easy_perform() failed with Couldn't connect to server
+10/08/16-08:18:27 - ERROR     - HTTPRequest - Aborted http-post-request, because curl_easy_perform() failed with URL using bad/illegal format or missing URL
+10/08/16-08:18:28 - ERROR     - HTTPRequest - Aborted http-get-request, because curl_easy_perform() failed with HTTP response code said error
+10/08/16-08:18:28 - ERROR     - HTTPRequest - Aborted http-get-request, because curl_easy_perform() failed with URL using bad/illegal format or missing URL
+10/08/16-08:18:28 - INFO      - DBInterface - Initialized DBInterface with url : http://localhost:8086.
+10/08/16-08:19:13 - ERROR     - HTTPRequest - Aborted http-post-request, because curl_easy_perform() failed with Couldn't connect to server
+10/08/16-08:19:13 - ERROR     - HTTPRequest - Aborted http-post-request, because curl_easy_perform() failed with URL using bad/illegal format or missing URL
+10/08/16-08:19:14 - ERROR     - HTTPRequest - Aborted http-get-request, because curl_easy_perform() failed with HTTP response code said error
+10/08/16-08:19:14 - ERROR     - HTTPRequest - Aborted http-get-request, because curl_easy_perform() failed with URL using bad/illegal format or missing URL
+10/08/16-08:19:14 - INFO      - DBInterface - Initialized DBInterface with url : http://localhost:8086.
+10/08/16-08:22:10 - ERROR     - HTTPRequest - Aborted http-post-request, because curl_easy_perform() failed with Couldn't connect to server
+10/08/16-08:22:10 - ERROR     - HTTPRequest - Aborted http-post-request, because curl_easy_perform() failed with URL using bad/illegal format or missing URL
+10/08/16-08:22:10 - ERROR     - HTTPRequest - Aborted http-get-request, because curl_easy_perform() failed with HTTP response code said error
+10/08/16-08:22:10 - ERROR     - HTTPRequest - Aborted http-get-request, because curl_easy_perform() failed with URL using bad/illegal format or missing URL
+10/08/16-08:22:10 - INFO      - DBInterface - Initialized DBInterface with url : http://localhost:8086.
+10/08/16-08:23:28 - ERROR     - HTTPRequest - Aborted http-post-request, because curl_easy_perform() failed with Couldn't connect to server
+10/08/16-08:23:28 - ERROR     - HTTPRequest - Aborted http-post-request, because curl_easy_perform() failed with URL using bad/illegal format or missing URL
+10/08/16-08:23:28 - ERROR     - HTTPRequest - Aborted http-get-request, because curl_easy_perform() failed with HTTP response code said error
+10/08/16-08:23:28 - ERROR     - HTTPRequest - Aborted http-get-request, because curl_easy_perform() failed with URL using bad/illegal format or missing URL
+10/08/16-08:23:28 - INFO      - DBInterface - Initialized DBInterface with url : http://localhost:8086.
+10/08/16-08:26:30 - ERROR     - HTTPRequest - Aborted http-post-request, because curl_easy_perform() failed with Couldn't connect to server
+10/08/16-08:26:30 - ERROR     - HTTPRequest - Aborted http-post-request, because curl_easy_perform() failed with URL using bad/illegal format or missing URL
+10/08/16-08:26:31 - ERROR     - HTTPRequest - Aborted http-get-request, because curl_easy_perform() failed with HTTP response code said error
+10/08/16-08:26:31 - ERROR     - HTTPRequest - Aborted http-get-request, because curl_easy_perform() failed with URL using bad/illegal format or missing URL
+10/08/16-08:26:31 - INFO      - DBInterface - Initialized DBInterface with url : http://localhost:8086.
+10/08/16-08:30:07 - ERROR     - HTTPRequest - Aborted http-post-request, because curl_easy_perform() failed with Couldn't connect to server
+10/08/16-08:30:07 - ERROR     - HTTPRequest - Aborted http-post-request, because curl_easy_perform() failed with URL using bad/illegal format or missing URL
+10/08/16-08:30:08 - ERROR     - HTTPRequest - Aborted http-get-request, because curl_easy_perform() failed with HTTP response code said error
+10/08/16-08:30:08 - ERROR     - HTTPRequest - Aborted http-get-request, because curl_easy_perform() failed with URL using bad/illegal format or missing URL
+10/08/16-08:30:08 - INFO      - DBInterface - Initialized DBInterface with url : http://localhost:8086.
+10/08/16-08:41:52 - ERROR     - HTTPRequest - Aborted http-post-request, because curl_easy_perform() failed with Couldn't connect to server
+10/08/16-08:41:52 - ERROR     - HTTPRequest - Aborted http-post-request, because curl_easy_perform() failed with URL using bad/illegal format or missing URL
+10/08/16-08:41:52 - ERROR     - HTTPRequest - Aborted http-get-request, because curl_easy_perform() failed with HTTP response code said error
+10/08/16-08:41:52 - ERROR     - HTTPRequest - Aborted http-get-request, because curl_easy_perform() failed with URL using bad/illegal format or missing URL
+10/08/16-08:41:52 - INFO      - DBInterface - Initialized DBInterface with url : http://localhost:8086.
+10/08/16-08:44:07 - ERROR     - HTTPRequest - Aborted http-post-request, because curl_easy_perform() failed with Couldn't connect to server
+10/08/16-08:44:07 - ERROR     - HTTPRequest - Aborted http-post-request, because curl_easy_perform() failed with URL using bad/illegal format or missing URL
+10/08/16-08:44:08 - ERROR     - HTTPRequest - Aborted http-get-request, because curl_easy_perform() failed with HTTP response code said error
+10/08/16-08:44:08 - ERROR     - HTTPRequest - Aborted http-get-request, because curl_easy_perform() failed with URL using bad/illegal format or missing URL
+10/08/16-08:44:08 - INFO      - DBInterface - Initialized DBInterface with url : http://localhost:8086.
+10/08/16-08:45:17 - ERROR     - HTTPRequest - Aborted http-post-request, because curl_easy_perform() failed with Couldn't connect to server
+10/08/16-08:45:17 - ERROR     - HTTPRequest - Aborted http-post-request, because curl_easy_perform() failed with URL using bad/illegal format or missing URL
+10/08/16-08:45:18 - ERROR     - HTTPRequest - Aborted http-get-request, because curl_easy_perform() failed with HTTP response code said error
+10/08/16-08:45:18 - ERROR     - HTTPRequest - Aborted http-get-request, because curl_easy_perform() failed with URL using bad/illegal format or missing URL
+10/08/16-08:45:18 - INFO      - DBInterface - Initialized DBInterface with url : http://localhost:8086.
+10/08/16-08:46:51 - ERROR     - HTTPRequest - Aborted http-post-request, because curl_easy_perform() failed with Couldn't connect to server
+10/08/16-08:46:51 - ERROR     - HTTPRequest - Aborted http-post-request, because curl_easy_perform() failed with URL using bad/illegal format or missing URL
+10/08/16-08:46:51 - ERROR     - HTTPRequest - Aborted http-get-request, because curl_easy_perform() failed with HTTP response code said error
+10/08/16-08:46:51 - ERROR     - HTTPRequest - Aborted http-get-request, because curl_easy_perform() failed with URL using bad/illegal format or missing URL
+10/08/16-08:46:51 - INFO      - DBInterface - Initialized DBInterface with url : http://localhost:8086.
+10/08/16-08:48:46 - ERROR     - HTTPRequest - Aborted http-post-request, because curl_easy_perform() failed with Couldn't connect to server
+10/08/16-08:48:46 - ERROR     - HTTPRequest - Aborted http-post-request, because curl_easy_perform() failed with URL using bad/illegal format or missing URL
+10/08/16-08:48:46 - ERROR     - HTTPRequest - Aborted http-get-request, because curl_easy_perform() failed with HTTP response code said error
+10/08/16-08:48:46 - ERROR     - HTTPRequest - Aborted http-get-request, because curl_easy_perform() failed with URL using bad/illegal format or missing URL
+10/08/16-08:48:46 - INFO      - DBInterface - Initialized DBInterface with url : http://localhost:8086.
+10/08/16-08:53:48 - ERROR     - HTTPRequest - Aborted http-post-request, because curl_easy_perform() failed with Couldn't connect to server
+10/08/16-08:53:48 - ERROR     - HTTPRequest - Aborted http-post-request, because curl_easy_perform() failed with URL using bad/illegal format or missing URL
+10/08/16-08:53:49 - ERROR     - HTTPRequest - Aborted http-get-request, because curl_easy_perform() failed with HTTP response code said error
+10/08/16-08:53:49 - ERROR     - HTTPRequest - Aborted http-get-request, because curl_easy_perform() failed with URL using bad/illegal format or missing URL
+10/08/16-08:53:49 - INFO      - DBInterface - Initialized DBInterface with url : http://localhost:8086.
+10/08/16-08:54:36 - ERROR     - HTTPRequest - Aborted http-post-request, because curl_easy_perform() failed with Couldn't connect to server
+10/08/16-08:54:36 - ERROR     - HTTPRequest - Aborted http-post-request, because curl_easy_perform() failed with URL using bad/illegal format or missing URL
+10/08/16-08:54:36 - ERROR     - HTTPRequest - Aborted http-get-request, because curl_easy_perform() failed with HTTP response code said error
+10/08/16-08:54:36 - ERROR     - HTTPRequest - Aborted http-get-request, because curl_easy_perform() failed with URL using bad/illegal format or missing URL
+10/08/16-08:54:37 - INFO      - DBInterface - Initialized DBInterface with url : http://localhost:8086.
+10/08/16-08:55:22 - ERROR     - HTTPRequest - Aborted http-post-request, because curl_easy_perform() failed with Couldn't connect to server
+10/08/16-08:55:22 - ERROR     - HTTPRequest - Aborted http-post-request, because curl_easy_perform() failed with URL using bad/illegal format or missing URL
+10/08/16-08:55:23 - ERROR     - HTTPRequest - Aborted http-get-request, because curl_easy_perform() failed with HTTP response code said error
+10/08/16-08:55:23 - ERROR     - HTTPRequest - Aborted http-get-request, because curl_easy_perform() failed with URL using bad/illegal format or missing URL
+10/08/16-08:55:23 - INFO      - DBInterface - Initialized DBInterface with url : http://localhost:8086.
+10/08/16-09:03:28 - ERROR     - HTTPRequest - Aborted http-post-request, because curl_easy_perform() failed with Couldn't connect to server
+10/08/16-09:03:28 - ERROR     - HTTPRequest - Aborted http-post-request, because curl_easy_perform() failed with URL using bad/illegal format or missing URL
+10/08/16-09:03:29 - ERROR     - HTTPRequest - Aborted http-get-request, because curl_easy_perform() failed with HTTP response code said error
+10/08/16-09:03:29 - ERROR     - HTTPRequest - Aborted http-get-request, because curl_easy_perform() failed with URL using bad/illegal format or missing URL
+10/08/16-09:03:29 - INFO      - DBInterface - Initialized DBInterface with url : http://localhost:8086.

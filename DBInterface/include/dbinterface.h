@@ -9,6 +9,14 @@
 #ifndef DBINTERFACE_H
 #define DBINTERFACE_H
 
+// todo
+#include <QStringList>
+// --
+#include <QString>
+#include <QJsonDocument>
+#include <QJsonObject>
+#include <QJsonArray>
+// ---
 #include <sstream>
 #include <algorithm>
 #include <iomanip>
@@ -58,6 +66,7 @@ class DBInterface {
         /* --- miscellaneous --- */
         string cleanString(const string& stringToClean_);
         string cTimeToString(struct tm datetime_, bool inUnixTime_);
+        vector<DataBuffer> jsonToDataBufferVector(string json_);
 };
 
 #endif // DBINTERFACE_H

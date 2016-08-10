@@ -108,6 +108,8 @@ DataBuffer DBInterface::readFromDataBase(DataBuffer& dataBuffer_) {
             string answer = req.get(httpRequestUrl.str());
             cout << answer;
 
+            vector<DataBuffer> result = jsonToDataBufferVector(answer);
+
             return dataBuffer_;
         }
     } else {
@@ -206,6 +208,54 @@ string DBInterface::cTimeToString(tm datetime_, bool inUnixTime_) {
         dateTimeString << datetime_.tm_sec  << "Z" ;
     }
     return dateTimeString.str();
+}
+
+vector<DataBuffer> DBInterface::jsonToDataBufferVector(string json_) {
+    vector<DataBuffer> result;
+    QString jsonQString(json_.c_str());
+    QJsonDocument jsonDocument = QJsonDocument::fromJson(jsonQString.toUtf8());
+    QJsonObject jsonObject = jsonDocument.object();
+
+    // parse json from influxdb
+    if (jsonObject.contains(QString("results"))) {
+        QJsonArray tempArray = jsonObject["results"].toArray();
+        QJsonObject tempObject = tempArray.first().toObject();
+        QStringList temp = tempObject.keys();
+        if (tempObject.contains(QString("series"))) {
+            tempArray = tempObject["series"].toArray();
+            tempObject = tempArray.first().toObject();
+            if (tempObject.contains(QString("columns"))) {
+                QJsonArray names  = tempObject["columns"].toArray();
+                QJsonArray values = tempObject["values" ].toArray();
+                QJsonValue tempValue = tempArray.first();
+
+                typedef QJsonArray::iterator it_type;
+                for(it_type iterator = values.begin(); iterator != values.end(); iterator++) {
+                    QJsonArray dataSet = values.at(iterator.i).toArray();
+                    DataBuffer tempDataBuffer;
+                    for(it_type iterator2 = dataSet.begin(); iterator2 != dataSet.end(); iterator2++) {
+                        QJsonValue valueJSON = dataSet.at(iterator2.i);
+
+
+                        string name = names.at(iterator2.i).toString().toStdString();
+
+                        if (name == "time") {
+                            cout << "value value : " << valueJSON.toString().toStdString() << endl;
+                        } else {
+                            double valueDouble = valueJSON.toDouble();
+                            tempDataBuffer.data[name] = valueDouble;
+                            cout << "value value : " << valueDouble << endl;
+                        }
+                    }
+                    result.push_back(tempDataBuffer);
+
+                }
+            }
+        }
+    }
+
+
+    return result;
 }
 
 
