@@ -73,12 +73,17 @@ void DBInterface::writeToDataBase(DataBuffer& dataBuffer_) {
  * @param dataBuffer_ requested data (is only filled with requested strings)
  * @return returns the requested dataBuffer_ which now contains requested data
  */
-DataBuffer DBInterface::readFromDataBase(DataBuffer& dataBuffer_) {
-    if (readStatusOK()) {
-        DataBuffer result = dataBuffer_;
+vector<DataBuffer> DBInterface::readFromDataBase(DataBuffer& dataBuffer_) {
+    // create empty result
+    vector<DataBuffer> result;
 
+    if (readStatusOK()) {
+
+        // create url-string for select ... from ...
         stringstream httpRequestUrl;
         httpRequestUrl << URL_OF_DATABASE << "/query?pretty=true&db=" << NAME_OF_DATBASE << "&q=SELECT+"; // << "&precision=s";
+
+        // iterate all requested fields
         bool printComma = false;
         typedef std::map<string, double>::iterator it_type;
         for(it_type iterator = dataBuffer_.data.begin(); iterator != dataBuffer_.data.end(); iterator++) {
@@ -90,33 +95,37 @@ DataBuffer DBInterface::readFromDataBase(DataBuffer& dataBuffer_) {
             string name = cleanString(iterator->first);
             httpRequestUrl << name << "+";
         }
+
+        // add requested datasource
         if (!dataBuffer_.useDataSource) {
             log << SLevel(ERROR) << "Aborted reading from database because there was either no DataSource specified";
             log << " or the useDataSource-flag was not set to true." << endl;
-            //todo return empty dataBuffer
         } else {
             string dataSource = cleanString(dataBuffer_.dataSource);
             httpRequestUrl << "FROM+point+where+DataSource+=+'" << dataSource << "'";
+
+            // add requested datetime-range
             if (dataBuffer_.useDateTimes) {
                 string startDateTime = cTimeToString(dataBuffer_.startDateTime,false);
                 string   endDateTime = cTimeToString(  dataBuffer_.endDateTime,false);
                 httpRequestUrl << "+and+time+>=+'" << startDateTime << "'";
                 httpRequestUrl << "+and+time+<=+'" <<   endDateTime << "'";
             }
-            cout << "request : " << httpRequestUrl.str() << endl;
+
+            // execute request
             HTTPRequest req;
-            string answer = req.get(httpRequestUrl.str());
-            cout << answer;
+            string answerJSON = req.get(httpRequestUrl.str());
 
-            vector<DataBuffer> result = jsonToDataBufferVector(answer);
+            // convert json to vector of DataBuffer
+            result = jsonToDataBufferVector(answerJSON,dataBuffer_.dataSource);
 
-            return dataBuffer_;
         }
     } else {
         log << SLevel(ERROR) << "Aborted reading from database because of status not OK" << endl;
-        DataBuffer emptyDataBuffer;
-        return emptyDataBuffer;
     }
+
+    // return
+    return result;
 }
 
 /**
@@ -308,7 +317,7 @@ tm DBInterface::stringToCTime(const string &dateTimeString_) {
  * If the JSONs origin was InfluxDB, the return values contains a DataBuffer for
  * every DateTime which was requested from InfluxDB.
  */
-vector<DataBuffer> DBInterface::jsonToDataBufferVector(const string &json_) {
+vector<DataBuffer> DBInterface::jsonToDataBufferVector(const string &json_, const string& dataSource_) {
     vector<DataBuffer> result;
     QString jsonQString(json_.c_str());
     QJsonDocument jsonDocument = QJsonDocument::fromJson(jsonQString.toUtf8());
@@ -351,6 +360,11 @@ vector<DataBuffer> DBInterface::jsonToDataBufferVector(const string &json_) {
                             tempDataBuffer.data[name] = valueDouble;
                         }
                     }
+                    // add DataSource;
+                    tempDataBuffer.useDataSource = true;
+                    tempDataBuffer.dataSource = dataSource_;
+
+                    // add data buffer to vector
                     result.push_back(tempDataBuffer);
 
                 }

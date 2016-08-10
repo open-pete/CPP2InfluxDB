@@ -43,12 +43,12 @@ class DBInterface {
         ~DBInterface() {}
 
         /* --- interfacing the database --- */
-        void       init             ();
-        void       writeToDataBase  (DataBuffer &dataBuffer_);
-        DataBuffer readFromDataBase (DataBuffer &dataBuffer_);
-        void       writeStatusOK    (      bool        statusOK_  );
-        bool       readStatusOK     ();
-        bool       getDBFailure     ();
+        void               init             ();
+        void               writeToDataBase  (DataBuffer &dataBuffer_);
+        vector<DataBuffer> readFromDataBase (DataBuffer &dataBuffer_);
+        void               writeStatusOK    (      bool  statusOK_  );
+        bool               readStatusOK     ();
+        bool               getDBFailure     ();
 
 
     private:
@@ -67,7 +67,7 @@ class DBInterface {
         string cleanString(const string& stringToClean_);
         string cTimeToString(struct tm datetime_, bool inUnixTime_);
         struct tm stringToCTime(const string& dateTimeString_);
-        vector<DataBuffer> jsonToDataBufferVector(const string& json_);
+        vector<DataBuffer> jsonToDataBufferVector(const string& json_, const string &dataSource_);
 };
 
 #endif // DBINTERFACE_H
