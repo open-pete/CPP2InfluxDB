@@ -157,6 +157,7 @@ void DBInterface::writeStatusOK(bool statusOK_) {
 
     httpRequestPostFields << "statusOK val=" << statusOK_;
 
+    HTTPRequest req;
     bool noFailure = req.post(httpRequestUrl.str(),httpRequestPostFields.str());
     setDBFailure(!noFailure);
 }
