@@ -1,5 +1,6 @@
 #define CATCH_CONFIG_MAIN  // This tells Catch to provide a main() - only do this in one cpp file
 #include "catch.hpp"
+#include <float.h>
 #include "dbinterface.h"
 
 TEST_CASE( "HTTPRequest.post works") {
@@ -91,15 +92,13 @@ TEST_CASE("DBInterface, write/read to/from database, getDBFailure") {
         REQUIRE(dbi.getDBFailure() == false);
     }
 
-    /*
-    SECTION ("write / read date = 1970") {
-        //2015-06-11T20:46:02
-        dataBuffer.startDateTime.tm_sec  = 0;    // seconds
+    SECTION ("write / read date = 01.01.1972") {
+        dataBuffer.startDateTime.tm_sec  = 0;   // seconds
         dataBuffer.startDateTime.tm_min  = 0;   // minutes
-        dataBuffer.startDateTime.tm_hour = 1;   // hours
+        dataBuffer.startDateTime.tm_hour = 0;   // hours
         dataBuffer.startDateTime.tm_mday = 1;   // day
         dataBuffer.startDateTime.tm_mon  = 1;    // month
-        dataBuffer.startDateTime.tm_year = 1971; // Year
+        dataBuffer.startDateTime.tm_year = 1972; // Year
 
         dataBuffer.endDateTime = dataBuffer.startDateTime;
         dataBuffer.useDateTimes = true;
@@ -119,7 +118,111 @@ TEST_CASE("DBInterface, write/read to/from database, getDBFailure") {
         REQUIRE(dbi.getDBFailure() == false);
     }
 
-*/
+    SECTION ("write / read date < 01.01.1972") {
+        dataBuffer.startDateTime.tm_sec  = 0;   // seconds
+        dataBuffer.startDateTime.tm_min  = 0;   // minutes
+        dataBuffer.startDateTime.tm_hour = 0;   // hours
+        dataBuffer.startDateTime.tm_mday = 31;   // day
+        dataBuffer.startDateTime.tm_mon  = 12;    // month
+        dataBuffer.startDateTime.tm_year = 1971; // Year
 
+        dataBuffer.endDateTime = dataBuffer.startDateTime;
+        dataBuffer.useDateTimes = true;
+
+        dataBuffer.dataSource = "Forecast";
+        dataBuffer.useDataSource = true;
+
+        dataBuffer.data["Lufttemperatur_2m"] = 14.5;
+        dataBuffer.data["RelativeLuftfeuchte_2m"] = 1200;
+        dbi.writeToDataBase(dataBuffer);
+
+        dataBuffer2 = dataBuffer;
+        dataBuffer2.data["Lufttemperatur_2m"] = 0;
+        dataBuffer2.data["RelativeLuftfeuchte_2m"] = 0;
+        vector<DataBuffer> dataBufferVec = dbi.readFromDataBase(dataBuffer2);
+        REQUIRE(dataBufferVec.size() == 0);
+        REQUIRE(dbi.getDBFailure() == true);
+    }
+
+
+
+    SECTION ("write / read valid values") {
+        dataBuffer.startDateTime.tm_sec  = 0;   // seconds
+        dataBuffer.startDateTime.tm_min  = 0;   // minutes
+        dataBuffer.startDateTime.tm_hour = 0;   // hours
+        dataBuffer.startDateTime.tm_mday = 31;   // day
+        dataBuffer.startDateTime.tm_mon  = 12;   // month
+        dataBuffer.startDateTime.tm_year = 1972; // Year
+
+        dataBuffer.endDateTime = dataBuffer.startDateTime;
+        dataBuffer.useDateTimes = true;
+
+        dataBuffer.dataSource = "Forecast";
+        dataBuffer.useDataSource = true;
+
+        dataBuffer.data["Lufttemperatur_2m"] = INFLUXDB_MAX;
+        dataBuffer.data["RelativeLuftfeuchte_2m"] = INFLUXDB_MIN;
+        dataBuffer.data["Windgeschwindigkeit_Stundenmittel"] = 0;
+
+        dbi.writeToDataBase(dataBuffer);
+
+        dataBuffer2 = dataBuffer;
+        dataBuffer2.data["Lufttemperatur_2m"] = 0;
+        dataBuffer2.data["RelativeLuftfeuchte_2m"] = 0;
+        dataBuffer2.data["Windgeschwindigkeit_Stundenmittel"] = 0;
+        vector<DataBuffer> dataBufferVec = dbi.readFromDataBase(dataBuffer2);
+        REQUIRE(dataBufferVec[0] == dataBuffer);
+        REQUIRE(dbi.getDBFailure() == false);
+    }
+
+    SECTION ("write / read invalid values and strings") {
+        // invalid values get cut to range
+        // invalid extra signs get removed
+        // (alphabetical chars, numbers and '_' are allowed)
+        dataBuffer.startDateTime.tm_sec  = 59;   // seconds
+        dataBuffer.startDateTime.tm_min  = 59;   // minutes
+        dataBuffer.startDateTime.tm_hour = 1;   // hours
+        dataBuffer.startDateTime.tm_mday = 10;   // day
+        dataBuffer.startDateTime.tm_mon  = 8;   // month
+        dataBuffer.startDateTime.tm_year = 2016; // Year
+
+        dataBuffer.endDateTime = dataBuffer.startDateTime;
+        dataBuffer.useDateTimes = true;
+
+        dataBuffer.dataSource = "Foreca%st";
+        dataBuffer.useDataSource = true;
+
+        dataBuffer.data["Luft%&te2mperatur_2m"] = INFLUXDB_MAX+1;
+        dataBuffer.data["RelativeL34uf'tfeuchte_2m"] = INFLUXDB_MIN-1;
+        dataBuffer.data["Windgeschwindi()gk?eit_Stundenmittel"] = 0;
+
+        dbi.writeToDataBase(dataBuffer);
+
+        dataBuffer2 = dataBuffer;
+        dataBuffer2.data["Luft%&te2mperatur_2m"] = 0;
+        dataBuffer2.data["RelativeL34uf'tfeuchte_2m"] = 0;
+        dataBuffer2.data["Windgeschwindi()gk?eit_Stundenmittel"] = 0;
+        vector<DataBuffer> dataBufferVec = dbi.readFromDataBase(dataBuffer2);
+
+        DataBuffer dataBufferWithoutExtraSigns;
+
+        dataBufferWithoutExtraSigns.startDateTime = dataBuffer.startDateTime;
+        dataBufferWithoutExtraSigns.endDateTime   = dataBuffer.endDateTime;
+        dataBufferWithoutExtraSigns.useDateTimes = true;
+
+        dataBufferWithoutExtraSigns.dataSource = "Forecast";
+        dataBufferWithoutExtraSigns.useDataSource = true;
+
+        dataBufferWithoutExtraSigns.data["Luftte2mperatur_2m"] = INFLUXDB_MAX+1;
+        dataBufferWithoutExtraSigns.data["RelativeL34uftfeuchte_2m"] = INFLUXDB_MIN-1;
+        dataBufferWithoutExtraSigns.data["Windgeschwindigkeit_Stundenmittel"] = 0;
+
+        REQUIRE(dataBufferVec[0] == dataBufferWithoutExtraSigns);
+        REQUIRE(dbi.getDBFailure() == false);
+    }
+
+}
+
+TEST_CASE ("Write / Read Status") {
 
 }

@@ -51,13 +51,20 @@ void DBInterface::writeToDataBase(DataBuffer& dataBuffer_) {
                     printComma = true;
                 }
                 string name = cleanString(iterator->first);
-                double value = iterator->second;
+                double value = cutValueToInfluxDBRange(iterator->second);
                 httpRequestPostFields << name << "=" << value;
             }
             // create datetime-string
             if (dataBuffer_.useDateTimes) {
-                string startDateTime = cTimeToString(dataBuffer_.startDateTime,true);
-                httpRequestPostFields << " " << startDateTime;
+                if (dataBuffer_.startDateTime.tm_year <= 1971) {
+                    log << SLevel(ERROR) << "Aborted writing to database because of invalid datetime. " <<
+                    "Please use only years bigger than 1971." << endl;
+                    setDBFailure(true);
+                    return;
+                } else {
+                    string startDateTime = cTimeToString(dataBuffer_.startDateTime,true);
+                    httpRequestPostFields << " " << startDateTime;
+                }
             }
             HTTPRequest req;
             bool noFailure = req.post(httpRequestUrl.str(),httpRequestPostFields.str());
@@ -99,14 +106,21 @@ vector<DataBuffer> DBInterface::readFromDataBase(DataBuffer& dataBuffer_) {
 
         // add requested datasource
         if (!dataBuffer_.useDataSource) {
-            log << SLevel(ERROR) << "Aborted reading from database because there was either no DataSource specified";
-            log << " or the useDataSource-flag was not set to true." << endl;
+            log << SLevel(ERROR) << "Aborted reading from database because there was either no DataSource specified" <<
+            " or the useDataSource-flag was not set to true." << endl;
         } else {
             string dataSource = cleanString(dataBuffer_.dataSource);
             httpRequestUrl << "FROM+point+where+DataSource+=+'" << dataSource << "'";
 
             // add requested datetime-range
             if (dataBuffer_.useDateTimes) {
+                if ( (dataBuffer_.startDateTime.tm_year <= 1971) ||
+                     (dataBuffer_.endDateTime.tm_year   <= 1971) ){
+                    log << SLevel(ERROR) << "Aborted reading from database because of invalid datetime. " <<
+                    "Please use only years bigger than 1971." << endl;
+                    setDBFailure(true);
+                    return result;
+                }
                 string startDateTime = cTimeToString(dataBuffer_.startDateTime,false);
                 string   endDateTime = cTimeToString(  dataBuffer_.endDateTime,false);
                 httpRequestUrl << "+and+time+>=+'" << startDateTime << "'";
@@ -136,9 +150,15 @@ vector<DataBuffer> DBInterface::readFromDataBase(DataBuffer& dataBuffer_) {
  * @param statusOK_ boolean value which is wirtten to the database
  */
 void DBInterface::writeStatusOK(bool statusOK_) {
-    // --- TODO -- dummy code ---
-    cout << "write status to database : " << statusOK_ << endl;
-    // --- TODO -- dummy code ---
+    stringstream httpRequestUrl;
+
+    httpRequestUrl << URL_OF_DATABASE << "/write?db=" << NAME_OF_DATBASE << "&precision=s";
+    stringstream httpRequestPostFields;
+
+    httpRequestPostFields << "statusOK val=" << statusOK_;
+
+    bool noFailure = req.post(httpRequestUrl.str(),httpRequestPostFields.str());
+    setDBFailure(!noFailure);
 }
 
 /**
@@ -191,6 +211,43 @@ string DBInterface::cleanString(const string &stringToClean_) {
 }
 
 /**
+ * DBInterface::cutValueToInfluxDBRange
+ * @brief cuts val_ to the range INFLUXDB_MAX <= val_ >= INFLUXDB_MIN
+ * @param val_ value to cut
+ * @return returns INFLUXDB_MAX / INFLUXDB_MIN if value is bigger/smaller as INFLUXDB_MAX/INFLUXDB_MIN
+ */
+double DBInterface::cutValueToInfluxDBRange(double val_) {
+    if (val_ > INFLUXDB_MAX) {
+        return INFLUXDB_MAX;
+    } else if (val_ < INFLUXDB_MIN) {
+        return INFLUXDB_MIN;
+    } else {
+        return val_;
+    }
+}
+
+/**
+ * DBInterface::deletePaddingZeros
+ * @brief removes leading padding zeros from a given string
+ * @param stringWithPaddingZeros_ string with padding zeros
+ * @return return stringWithPaddingZeros_ without padding zeros
+ *
+ * NOTICE : if stringWithPaddingZeros_ consists of only zeros
+ *          the function returns "0"
+ */
+string DBInterface::deletePaddingZeros(const string &stringWithPaddingZeros_) {
+    string result = stringWithPaddingZeros_;
+    // erase leading zeros
+    result.erase(0, result.find_first_not_of('0'));
+    // if every char was a zero
+    // return only one zero
+    if (result == "") {
+        result = "0";
+    }
+    return result;
+}
+
+/**
  * DBInterface::cTimeToString
  * @brief convert a ctime struct to either a formatted string or the unix-time as string
  * @param datetime_ the struct which is to convert
@@ -224,6 +281,10 @@ string DBInterface::cTimeToString(tm datetime_, bool inUnixTime_) {
     if (inUnixTime_) {
         // convert to number of seconds since 1979 (unix-time)
         // e.g. 1434055562
+        if (datetime_.tm_hour == 0) {
+
+        }
+
         datetime_.tm_hour += 2;    // hours (0 to 23)
         datetime_.tm_mon  -= 1;    // month (0 bis 11)
         datetime_.tm_year -= 1900; // Year (calender-year minus 1900)
@@ -279,23 +340,23 @@ tm DBInterface::stringToCTime(const string &dateTimeString_) {
     result.tm_year = stoi(substring);
     // parse month
     substring = dateTimeString_.substr(5,2);
-    substring.erase(0, substring.find_first_not_of('0')); // erase leading zeros
+    substring = deletePaddingZeros(substring);
     result.tm_mon = stoi(substring);
     // parse day
     substring = dateTimeString_.substr(8,2);
-    substring.erase(0, substring.find_first_not_of('0')); // erase leading zeros
+    substring = deletePaddingZeros(substring);
     result.tm_mday = stoi(substring);
     // parse hour
     substring = dateTimeString_.substr(11,2);
-    substring.erase(0, substring.find_first_not_of('0')); // erase leading zeros
+    substring = deletePaddingZeros(substring);
     result.tm_hour = stoi(substring);
     // parse minutes
     substring = dateTimeString_.substr(14,2);
-    substring.erase(0, substring.find_first_not_of('0')); // erase leading zeros
+    substring = deletePaddingZeros(substring);
     result.tm_min = stoi(substring);
     // parse seconds
     substring = dateTimeString_.substr(17,2);
-    substring.erase(0, substring.find_first_not_of('0')); // erase leading zeros
+    substring = deletePaddingZeros(substring);
     result.tm_sec = stoi(substring);
 
     // set unused tm_fields
@@ -359,12 +420,12 @@ vector<DataBuffer> DBInterface::jsonToDataBufferVector(const string &json_, cons
                         } else {
                             // set values
                             double valueDouble = valueJSON.toDouble();
-                            tempDataBuffer.data[name] = valueDouble;
+                            tempDataBuffer.data[name] = cutValueToInfluxDBRange(valueDouble);
                         }
                     }
                     // add DataSource;
                     tempDataBuffer.useDataSource = true;
-                    tempDataBuffer.dataSource = dataSource_;
+                    tempDataBuffer.dataSource = cleanString(dataSource_);
 
                     // add data buffer to vector
                     result.push_back(tempDataBuffer);

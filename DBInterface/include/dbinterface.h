@@ -66,6 +66,8 @@ class DBInterface {
 
         /* --- miscellaneous --- */
         string cleanString(const string& stringToClean_);
+        double cutValueToInfluxDBRange(double val_);
+        string deletePaddingZeros(const string& stringWithPaddingZeros_);
         string cTimeToString(struct tm datetime_, bool inUnixTime_);
         struct tm stringToCTime(const string& dateTimeString_);
         vector<DataBuffer> jsonToDataBufferVector(const string& json_, const string &dataSource_);
