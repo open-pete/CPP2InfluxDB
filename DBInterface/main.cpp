@@ -177,6 +177,27 @@ TEST_CASE("DBInterface, write/read to/from database, getDBFailure") {
         REQUIRE(dbi.getDBFailure() == false);
     }
 
+    SECTION ("write / read with current local time") {
+        dataBuffer.useDateTimes = false;
+
+        dataBuffer.dataSource = "Forecast";
+        dataBuffer.useDataSource = true;
+
+        dataBuffer.data["Lufttemperatur_2m"] = -10.5;
+        dataBuffer.data["RelativeLuftfeuchte_2m"] = 90.4;
+        dataBuffer.data["Windgeschwindigkeit_Stundenmittel"] = 10.345;
+
+        dbi.writeToDataBase(dataBuffer);
+
+        dataBuffer2 = dataBuffer;
+        dataBuffer2.data["Lufttemperatur_2m"] = 0;
+        dataBuffer2.data["RelativeLuftfeuchte_2m"] = 0;
+        dataBuffer2.data["Windgeschwindigkeit_Stundenmittel"] = 0;
+        vector<DataBuffer> dataBufferVec = dbi.readFromDataBase(dataBuffer2);
+        REQUIRE(dataBufferVec[0] == dataBuffer);
+        REQUIRE(dbi.getDBFailure() == false);
+    }
+
     SECTION ("write / read invalid values and strings") {
         // invalid values get cut to range
         // invalid extra signs get removed

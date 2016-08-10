@@ -36,8 +36,8 @@ void DBInterface::writeToDataBase(DataBuffer& dataBuffer_) {
         httpRequestUrl << URL_OF_DATABASE << "/write?db=" << NAME_OF_DATBASE << "&precision=s";
         stringstream httpRequestPostFields;
         if (!dataBuffer_.useDataSource) {
-            log << SLevel(ERROR) << "Aborted writing to database because there was either no DataSource specified";
-            log << " or the useDataSource-flag was not set to true." << endl;
+            log << SLevel(ERROR) << "Aborted writing to database because there was either no DataSource specified" <<
+             " or the useDataSource-flag was not set to true." << endl;
         } else {
             string dataSource = cleanString(dataBuffer_.dataSource);
             httpRequestPostFields << "point,DataSource=" << dataSource << " ";
@@ -65,6 +65,11 @@ void DBInterface::writeToDataBase(DataBuffer& dataBuffer_) {
                     string startDateTime = cTimeToString(dataBuffer_.startDateTime,true);
                     httpRequestPostFields << " " << startDateTime;
                 }
+            } else {
+                // if no date-time is specified use local time (cut down to current hour)
+                int currentLocalDateTime = getCurrentDateTimeAsUnixTime();
+                string startDateTime = to_string(currentLocalDateTime);
+                httpRequestPostFields << " " << startDateTime;
             }
             HTTPRequest req;
             bool noFailure = req.post(httpRequestUrl.str(),httpRequestPostFields.str());
@@ -125,7 +130,15 @@ vector<DataBuffer> DBInterface::readFromDataBase(DataBuffer& dataBuffer_) {
                 string   endDateTime = cTimeToString(  dataBuffer_.endDateTime,false);
                 httpRequestUrl << "+and+time+>=+'" << startDateTime << "'";
                 httpRequestUrl << "+and+time+<=+'" <<   endDateTime << "'";
+            } else {
+                // if no date-time is specified use local time (cut down to current hour)
+                struct tm currentLocalDateTime = getCurrentDateTime();
+                string startDateTime = cTimeToString(currentLocalDateTime,false);
+                string   endDateTime = startDateTime;
+                httpRequestUrl << "+and+time+>=+'" << startDateTime << "'";
+                httpRequestUrl << "+and+time+<=+'" <<   endDateTime << "'";
             }
+
 
             // execute request
             HTTPRequest req;
@@ -391,6 +404,43 @@ tm DBInterface::stringToCTime(const string &dateTimeString_) {
     result.tm_isdst  = 0;
 
     return result;
+}
+
+/**
+ * DBInterface::getCurrentDateTime
+ * @brief gets current local time and outputs it
+ * @return returns current local time as tm struct
+ */
+tm DBInterface::getCurrentDateTime(bool cutToHours_) {
+    // create time variable
+    time_t  secondsSince1970;
+    struct tm *result;
+    time ( &secondsSince1970 );
+    result = localtime ( &secondsSince1970 );
+    result->tm_year += 1900;
+    result->tm_mon  += 1;
+    result->tm_isdst = 0;
+    if (cutToHours_) {
+        result->tm_min = 0;
+        result->tm_sec = 0;
+    }
+    return *result;
+}
+
+
+/**
+ * DBInterface::getCurrentDateTime
+ * @brief gets current local time and outputs it
+ * @return returns current local time as seconds since 1970
+ */
+int DBInterface::getCurrentDateTimeAsUnixTime(bool cutToHours_) {
+    struct tm temp = getCurrentDateTime(cutToHours_);
+    temp.tm_mon  -= 1;    // month (0 bis 11)
+    temp.tm_year -= 1900; // Year (calender-year minus 1900)
+    temp.tm_isdst = 1;    // converting us-summer-time
+
+    time_t secondsSince1970 = mktime(&temp);
+    return secondsSince1970;
 }
 
 /**
