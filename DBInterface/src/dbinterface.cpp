@@ -32,15 +32,15 @@ void DBInterface::writeToDataBase(DataBuffer& dataBuffer_) {
     if (readStatusOK()) {
 
         stringstream httpRequestUrl;
-        //http://localhost:8086/write?db=WeatherData2
 
-        httpRequestUrl << URL_OF_DATABASE << "/write?db=" << NAME_OF_DATBASE;
+        httpRequestUrl << URL_OF_DATABASE << "/write?db=" << NAME_OF_DATBASE << "&precision=s";
         stringstream httpRequestPostFields;
         if (!dataBuffer_.useDataSource) {
             log << SLevel(ERROR) << "Aborted writing to database because there was either no DataSource specified";
             log << " or the useDataSource-flag was not set to true." << endl;
         } else {
-            httpRequestPostFields << "point,DataSource=" << dataBuffer_.dataSource << " ";
+            string dataSource = cleanString(dataBuffer_.dataSource);
+            httpRequestPostFields << "point,DataSource=" << dataSource << " ";
 
             bool printComma = false;
             typedef std::map<string, double>::iterator it_type;
@@ -53,6 +53,11 @@ void DBInterface::writeToDataBase(DataBuffer& dataBuffer_) {
                 string name = cleanString(iterator->first);
                 double value = iterator->second;
                 httpRequestPostFields << name << "=" << value;
+            }
+            // create datetime-string
+            if (dataBuffer_.useDateTimes) {
+                string startDateTime = cTimeToString(dataBuffer_.startDateTime,true);
+                httpRequestPostFields << " " << startDateTime;
             }
             HTTPRequest req;
             req.post(httpRequestUrl.str(),httpRequestPostFields.str());
@@ -68,16 +73,43 @@ void DBInterface::writeToDataBase(DataBuffer& dataBuffer_) {
  * @param dataBuffer_ requested data (is only filled with requested strings)
  * @return returns the requested dataBuffer_ which now contains requested data
  */
-DataBuffer DBInterface::readFromDataBase(const DataBuffer& dataBuffer_) {
+DataBuffer DBInterface::readFromDataBase(DataBuffer& dataBuffer_) {
     if (readStatusOK()) {
-        // --- TODO -- dummy code ---
-        cout << "read from database : " << dataBuffer_ << endl;
-        DataBuffer temp = dataBuffer_;
-        for (auto& x : temp.data) {
-            x.second = rand() % 100;
+        DataBuffer result = dataBuffer_;
+
+        stringstream httpRequestUrl;
+        httpRequestUrl << URL_OF_DATABASE << "/query?pretty=true&db=" << NAME_OF_DATBASE << "&q=SELECT+"; // << "&precision=s";
+        bool printComma = false;
+        typedef std::map<string, double>::iterator it_type;
+        for(it_type iterator = dataBuffer_.data.begin(); iterator != dataBuffer_.data.end(); iterator++) {
+            if (printComma) {
+                httpRequestUrl << ",";
+            } else {
+                printComma = true;
+            }
+            string name = cleanString(iterator->first);
+            httpRequestUrl << name << "+";
         }
-        return dataBuffer_;
-        // --- TODO -- dummy code ---
+        if (!dataBuffer_.useDataSource) {
+            log << SLevel(ERROR) << "Aborted reading from database because there was either no DataSource specified";
+            log << " or the useDataSource-flag was not set to true." << endl;
+            //todo return empty dataBuffer
+        } else {
+            string dataSource = cleanString(dataBuffer_.dataSource);
+            httpRequestUrl << "FROM+point+where+DataSource+=+'" << dataSource << "'";
+            if (dataBuffer_.useDateTimes) {
+                string startDateTime = cTimeToString(dataBuffer_.startDateTime,false);
+                string   endDateTime = cTimeToString(  dataBuffer_.endDateTime,false);
+                httpRequestUrl << "+and+time+>=+'" << startDateTime << "'";
+                httpRequestUrl << "+and+time+<=+'" <<   endDateTime << "'";
+            }
+            cout << "request : " << httpRequestUrl.str() << endl;
+            HTTPRequest req;
+            string answer = req.get(httpRequestUrl.str());
+            cout << answer;
+
+            return dataBuffer_;
+        }
     } else {
         log << SLevel(ERROR) << "Aborted reading from database because of status not OK" << endl;
         DataBuffer emptyDataBuffer;
@@ -144,5 +176,38 @@ string DBInterface::cleanString(const string &stringToClean_) {
 
     return result;
 }
+
+string DBInterface::cTimeToString(tm datetime_, bool inUnixTime_) {
+    stringstream dateTimeString;
+
+    if (inUnixTime_) {
+        // convert to number of seconds since 1979 (unix-time)
+        // e.g. 1434055562
+        datetime_.tm_hour += 2;    // hours (0 to 23)
+        datetime_.tm_mon  -= 1;    // month (0 bis 11)
+        datetime_.tm_year -= 1900; // Year (calender-year minus 1900)
+        datetime_.tm_isdst = 1;    // converting us-summer-time
+
+        time_t secondsSince1970 = mktime(&datetime_);
+        dateTimeString << secondsSince1970;
+    } else {
+        // convert to formatted string
+        // e.g. 2016-08-09T16:40:57Z
+        dateTimeString << datetime_.tm_year << "-" ;
+        dateTimeString << setfill('0') << setw(2);
+        dateTimeString << datetime_.tm_mon  << "-" ;
+        dateTimeString << setfill('0') << setw(2);
+        dateTimeString << datetime_.tm_mday << "T" ;
+        dateTimeString << setfill('0') << setw(2);
+        dateTimeString << datetime_.tm_hour << ":" ;
+        dateTimeString << setfill('0') << setw(2);
+        dateTimeString << datetime_.tm_min  << ":" ;
+        dateTimeString << setfill('0') << setw(2);
+        dateTimeString << datetime_.tm_sec  << "Z" ;
+    }
+    return dateTimeString.str();
+}
+
+
 
 

@@ -11,6 +11,7 @@
 
 #include <sstream>
 #include <algorithm>
+#include <iomanip>
 // ---
 #include "DataBuffer.h"
 #include "config.h"
@@ -36,7 +37,7 @@ class DBInterface {
         /* --- interfacing the database --- */
         void       init             ();
         void       writeToDataBase  (DataBuffer &dataBuffer_);
-        DataBuffer readFromDataBase (const DataBuffer& dataBuffer_);
+        DataBuffer readFromDataBase (DataBuffer &dataBuffer_);
         void       writeStatusOK    (      bool        statusOK_  );
         bool       readStatusOK     ();
         bool       getDBFailure     ();
@@ -54,8 +55,9 @@ class DBInterface {
         bool dbFailure = false;
         LogWriter log;
 
-        /* --- remove special characters from string --- */
+        /* --- miscellaneous --- */
         string cleanString(const string& stringToClean_);
+        string cTimeToString(struct tm datetime_, bool inUnixTime_);
 };
 
 #endif // DBINTERFACE_H
