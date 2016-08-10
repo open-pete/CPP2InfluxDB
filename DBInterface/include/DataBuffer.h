@@ -38,6 +38,8 @@ struct DataBuffer{
     map<string,double> data;
 
     // operators
+    bool operator== (DataBuffer& other_);
+    //friend bool operator==(struct tm time1_, struct tm time2);
     friend ostream& operator<<(ostream& oStream_,DataBuffer dataBuffer_);
 };
 
