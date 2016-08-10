@@ -66,7 +66,8 @@ class DBInterface {
         /* --- miscellaneous --- */
         string cleanString(const string& stringToClean_);
         string cTimeToString(struct tm datetime_, bool inUnixTime_);
-        vector<DataBuffer> jsonToDataBufferVector(string json_);
+        struct tm stringToCTime(const string& dateTimeString_);
+        vector<DataBuffer> jsonToDataBufferVector(const string& json_);
 };
 
 #endif // DBINTERFACE_H

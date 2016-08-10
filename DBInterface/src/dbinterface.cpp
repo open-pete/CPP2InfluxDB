@@ -179,6 +179,34 @@ string DBInterface::cleanString(const string &stringToClean_) {
     return result;
 }
 
+/**
+ * DBInterface::cTimeToString
+ * @brief convert a ctime struct to either a formatted string or the unix-time as string
+ * @param datetime_ the struct which is to convert
+ * @param inUnixTime_ function returns unix-time as string if true, otherwise returns a formatted DateTimeString
+ * @return returns either a formatted string or the unix-time as string, depending on inUnixTime_
+ *
+ * This function can convert a ctime struct to either a formatted data-time-string
+ *   e.g. 2016-08-09T16:40:57Z
+ * or to the unix-time (seconds since 1970) as string
+ *   e.g. 1434055562
+ *
+ * NOTICE : only the tm-fields tm_year, tm_mon, tm_mday, tm_hour, tm_min, tm_sec are supported
+ * NOTICE : always set tm-fields to EXACTLY the values you want to see in string!
+ *          all conversion because of zero-indexes or 1900-offset are calculated inside the function
+ *
+ * for example :
+ *
+ *  tm_sec  = 2;    // seconds
+ *  tm_min  = 46;   // minutes
+ *  tm_hour = 20;   // hours
+ *  tm_mday = 11;   // day
+ *  tm_mon  = 6;    // month
+ *  tm_year = 2015; // Year
+ *
+ *  this returns the output
+ *   2015-06-11T20:46:02Z or 1434055562
+ */
 string DBInterface::cTimeToString(tm datetime_, bool inUnixTime_) {
     stringstream dateTimeString;
 
@@ -210,7 +238,77 @@ string DBInterface::cTimeToString(tm datetime_, bool inUnixTime_) {
     return dateTimeString.str();
 }
 
-vector<DataBuffer> DBInterface::jsonToDataBufferVector(string json_) {
+/**
+ * DBInterface::stringToCTime
+ * @brief parse formatted date-time-string to ctime
+ * @param dateTimeString_ formatted date-time-string
+ * @return returns a struct tm (ctime) which contains the datetime of dateTimeString_
+ *
+ * converts a date-time-string which MUST be formatted like :
+ * yyyy-mm-ddThh:mm:ssZ
+ * see the following example on how the string has to be formatted :
+ * 2016-08-09T16:40:57Z
+ *
+ * NOTICE : only the tm-fields tm_year, tm_mon, tm_mday, tm_hour, tm_min, tm_sec are supported
+ *          the other fields are ALWAYS set to :
+ *
+ *              tm_wday = 0;
+ *              tm_yday = 0;
+ *              tm_zone = "";
+ *              tm_gmtoff = 0;
+ *              tm_isdst = 1;
+ */
+tm DBInterface::stringToCTime(const string &dateTimeString_) {
+    //2016-08-09T16:40:57Z
+    struct tm result;
+    stringstream temp;
+    string substring;
+    // parse year
+    substring = dateTimeString_.substr(0,4);
+    result.tm_year = stoi(substring);
+    // parse month
+    substring = dateTimeString_.substr(5,2);
+    substring.erase(0, substring.find_first_not_of('0')); // erase leading zeros
+    result.tm_mon = stoi(substring);
+    // parse day
+    substring = dateTimeString_.substr(8,2);
+    substring.erase(0, substring.find_first_not_of('0')); // erase leading zeros
+    result.tm_mday = stoi(substring);
+    // parse hour
+    substring = dateTimeString_.substr(11,2);
+    substring.erase(0, substring.find_first_not_of('0')); // erase leading zeros
+    result.tm_hour = stoi(substring);
+    // parse minutes
+    substring = dateTimeString_.substr(14,2);
+    substring.erase(0, substring.find_first_not_of('0')); // erase leading zeros
+    result.tm_min = stoi(substring);
+    // parse seconds
+    substring = dateTimeString_.substr(17,2);
+    substring.erase(0, substring.find_first_not_of('0')); // erase leading zeros
+    result.tm_sec = stoi(substring);
+
+    // set unused tm_fields
+    result.tm_wday = 0;
+    result.tm_yday = 0;
+    result.tm_zone = "";
+    result.tm_gmtoff = 0;
+    result.tm_isdst = 1;
+
+    return result;
+}
+
+/**
+ * DBInterface::jsonToDataBufferVector
+ * @brief iterate through JSON and return data inside json_ as vector of DataBuffer
+ * @param json_ JSON string to convert
+ * @return returns a vector of DataBuffer which contains the data inside json_
+ *
+ * This function can convert a json received from either InfluxDB or TODO
+ * to a vector of DataBuffers.
+ * If the JSONs origin was InfluxDB, the return values contains a DataBuffer for
+ * every DateTime which was requested from InfluxDB.
+ */
+vector<DataBuffer> DBInterface::jsonToDataBufferVector(const string &json_) {
     vector<DataBuffer> result;
     QString jsonQString(json_.c_str());
     QJsonDocument jsonDocument = QJsonDocument::fromJson(jsonQString.toUtf8());
@@ -220,37 +318,47 @@ vector<DataBuffer> DBInterface::jsonToDataBufferVector(string json_) {
     if (jsonObject.contains(QString("results"))) {
         QJsonArray tempArray = jsonObject["results"].toArray();
         QJsonObject tempObject = tempArray.first().toObject();
-        QStringList temp = tempObject.keys();
         if (tempObject.contains(QString("series"))) {
             tempArray = tempObject["series"].toArray();
             tempObject = tempArray.first().toObject();
-            if (tempObject.contains(QString("columns"))) {
+            if (tempObject.contains(QString("columns")) &&
+                tempObject.contains(QString("values" )) ){
                 QJsonArray names  = tempObject["columns"].toArray();
                 QJsonArray values = tempObject["values" ].toArray();
-                QJsonValue tempValue = tempArray.first();
 
+                // iterate through all datasets
                 typedef QJsonArray::iterator it_type;
                 for(it_type iterator = values.begin(); iterator != values.end(); iterator++) {
                     QJsonArray dataSet = values.at(iterator.i).toArray();
                     DataBuffer tempDataBuffer;
+                    // iterate to all names/values in a dataset
                     for(it_type iterator2 = dataSet.begin(); iterator2 != dataSet.end(); iterator2++) {
+
+                        // get name
+                        string name = names.at(iterator2.i).toString().toStdString();
+                        // get value
                         QJsonValue valueJSON = dataSet.at(iterator2.i);
 
-
-                        string name = names.at(iterator2.i).toString().toStdString();
-
+                        // set time
                         if (name == "time") {
-                            cout << "value value : " << valueJSON.toString().toStdString() << endl;
+                            struct tm time = stringToCTime(valueJSON.toString().toStdString());
+                            tempDataBuffer.useDateTimes = true;
+                            tempDataBuffer.startDateTime = time;
+                            tempDataBuffer.endDateTime   = time;
                         } else {
+                            // set values
                             double valueDouble = valueJSON.toDouble();
                             tempDataBuffer.data[name] = valueDouble;
-                            cout << "value value : " << valueDouble << endl;
                         }
                     }
                     result.push_back(tempDataBuffer);
 
                 }
+            } else {
+                log << SLevel(ERROR) << "Aborted parsing InfluxDB-Json to databuffer. Unable to find 'columns and/or 'values' in JSON" << endl;
             }
+        } else {
+            log << SLevel(ERROR) << "Aborted parsing InfluxDB-Json to databuffer. Unable to find 'series' in JSON" << endl;
         }
     }
 

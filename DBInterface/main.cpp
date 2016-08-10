@@ -73,12 +73,12 @@ TEST_CASE("DBInterface, write/rewad to/from database, getDBFailure") {
 
     SECTION ("write / read valid databuffer") {
         //2015-06-11T20:46:02
-        dataBuffer.startDateTime.tm_sec  = 2;    // seconds (0-60) generally 0-59. The extra range is to accommodate for leap seconds in certain systems
-        dataBuffer.startDateTime.tm_min  = 46;   // minutes (0-59)
-        dataBuffer.startDateTime.tm_hour = 20;   // hours (0 to 23)
-        dataBuffer.startDateTime.tm_mday = 11;     // day (1 bis 31)
-        dataBuffer.startDateTime.tm_mon  = 6;    // month (0 bis 11)
-        dataBuffer.startDateTime.tm_year = 2015; // Year (calender-year minus 1900)
+        dataBuffer.startDateTime.tm_sec  = 2;    // seconds
+        dataBuffer.startDateTime.tm_min  = 46;   // minutes
+        dataBuffer.startDateTime.tm_hour = 20;   // hours
+        dataBuffer.startDateTime.tm_mday = 11;   // day
+        dataBuffer.startDateTime.tm_mon  = 6;    // month
+        dataBuffer.startDateTime.tm_year = 2015; // Year
 
         dataBuffer.endDateTime = dataBuffer.startDateTime;
         dataBuffer.useDateTimes = true;
