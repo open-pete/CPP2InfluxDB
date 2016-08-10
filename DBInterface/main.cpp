@@ -224,5 +224,16 @@ TEST_CASE("DBInterface, write/read to/from database, getDBFailure") {
 }
 
 TEST_CASE ("Write / Read Status") {
+    DBInterface& dbi = DBInterface::getInstance();
+    dbi.init();
 
+    SECTION("Write/Read of true works") {
+        dbi.writeStatusOK(true);
+        REQUIRE(dbi.readStatusOK());
+    }
+
+    SECTION("Write/Read of false works") {
+        dbi.writeStatusOK(false);
+        REQUIRE_FALSE(dbi.readStatusOK());
+    }
 }

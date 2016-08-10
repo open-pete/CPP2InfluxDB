@@ -151,15 +151,27 @@ vector<DataBuffer> DBInterface::readFromDataBase(DataBuffer& dataBuffer_) {
  */
 void DBInterface::writeStatusOK(bool statusOK_) {
     stringstream httpRequestUrl;
-
-    httpRequestUrl << URL_OF_DATABASE << "/write?db=" << NAME_OF_DATBASE << "&precision=s";
     stringstream httpRequestPostFields;
-
-    httpRequestPostFields << "statusOK val=" << statusOK_;
-
     HTTPRequest req;
-    bool noFailure = req.post(httpRequestUrl.str(),httpRequestPostFields.str());
+
+    // try to delete old value from influxDB
+    // (post writes an error to log, if there is nothing to delete)
+    httpRequestUrl << URL_OF_DATABASE << "/query?db=" << NAME_OF_DATBASE;
+    httpRequestPostFields << "q=drop measurement statusOK";
+    req.post(httpRequestUrl.str(),httpRequestPostFields.str());
+
+    // write new value to influxDB
+    stringstream httpRequestUrl2;
+    stringstream httpRequestPostFields2;
+    httpRequestUrl2 << URL_OF_DATABASE << "/write?db=" << NAME_OF_DATBASE << "&precision=s";
+
+    httpRequestPostFields2 << "statusOK value=" << statusOK_;
+
+    bool noFailure = req.post(httpRequestUrl2.str(),httpRequestPostFields2.str());
     setDBFailure(!noFailure);
+    if (!noFailure) {
+        log << SLevel(ERROR) << "Aborted writing statusOK to database because http-post was not possible." << endl;
+    }
 }
 
 /**
@@ -168,10 +180,21 @@ void DBInterface::writeStatusOK(bool statusOK_) {
  * @return returns the value of the boolean value statusOK
  */
 bool DBInterface::readStatusOK() {
-    // --- TODO -- dummy code ---
-    cout << "read statusOK" << endl;
-    return 1;//rand() % 1;
-    // --- TODO -- dummy code ---
+    // create url-string for select ... from ...
+    stringstream httpRequestUrl;
+    HTTPRequest req;
+
+    httpRequestUrl << URL_OF_DATABASE << "/query?pretty=true&db=" << NAME_OF_DATBASE << "&q=SELECT+";
+    httpRequestUrl << "value+FROM+statusOK";
+
+    string answerJSON = req.get(httpRequestUrl.str());
+    setDBFailure(answerJSON == "");
+
+    vector<DataBuffer> dataBufferVec = jsonToDataBufferVector(answerJSON,"");
+
+    double result = dataBufferVec[0].data["value"];
+
+    return (result != 0);
 }
 
 /**
@@ -443,7 +466,3 @@ vector<DataBuffer> DBInterface::jsonToDataBufferVector(const string &json_, cons
 
     return result;
 }
-
-
-
-
