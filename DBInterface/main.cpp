@@ -65,6 +65,8 @@ TEST_CASE("DBInterface, write/read to/from database, getDBFailure") {
     DBInterface& dbi = DBInterface::getInstance();
     dbi.init();
 
+    dbi.writeStatusOK(true);
+
     SECTION ("write / read valid databuffer") {
         //2015-06-11T20:46:02
         dataBuffer.startDateTime.tm_sec  = 2;    // seconds
