@@ -94,9 +94,7 @@ TEST_CASE("DBInterface, write/rewad to/from database, getDBFailure") {
         dataBuffer2.data["Temperature"] = 0;
         dataBuffer2.data["AirPressure"] = 0;
         vector<DataBuffer> dataBufferVec = dbi.readFromDataBase(dataBuffer2);
-        for (unsigned int i = 0; i < dataBufferVec.size(); i ++ ) {
-            cout << "no. : " << i << dataBufferVec[i] << endl;
-        }
+        REQUIRE(dataBufferVec[0] == dataBuffer);
     }
 
 

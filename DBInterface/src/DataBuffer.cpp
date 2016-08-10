@@ -42,7 +42,8 @@ bool DataBuffer::operator==(DataBuffer &other_) {
    time_t   endDateTimeOther = mktime(&( other_.endDateTime));
 
    // check attributes
-   if ( ( (*this).useDataSource != other_.useDataSource) ||
+   if ( ( (*this).dataSource    != other_.dataSource   ) ||
+        ( (*this).useDataSource != other_.useDataSource) ||
         ( (*this).useDateTimes  != other_.useDateTimes ) ||
         (     startDateTimeThis != startDateTimeOther  ) ||
         (       endDateTimeThis !=   endDateTimeOther  ) ){
