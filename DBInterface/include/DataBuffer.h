@@ -27,8 +27,8 @@ using namespace std;
 struct DataBuffer{
     // dateTimes;
     bool useDateTimes = false;
-    struct tm startDateTime;
-    struct tm endDateTime;
+    struct tm startDateTime = { .tm_sec = 0, .tm_min  = 0, .tm_hour = 0, .tm_mday = 0, .tm_mon  = 0, .tm_year = 0};
+    struct tm endDateTime   = { .tm_sec = 0, .tm_min  = 0, .tm_hour = 0, .tm_mday = 0, .tm_mon  = 0, .tm_year = 0};
 
     // data-source
     string dataSource;

@@ -8,12 +8,6 @@ TEST_CASE( "HTTPRequest.post works") {
     string url;
     string postFields;
 
-    SECTION("both parameters valid") {
-        url = "http://localhost:8086/write?db=test3";
-        postFields = "forecast,datatype=temperature value=50";
-        REQUIRE(req.post(url,postFields));
-    }
-
     SECTION("url_ valid, postFields_ empty") {
         url = "http://localhost:8086/query?q=create+database+WeatherData2&db=_internal";
         postFields = "";
@@ -178,6 +172,12 @@ TEST_CASE("DBInterface, write/read to/from database, getDBFailure") {
     }
 
     SECTION ("write / read with current local time") {
+        dataBuffer.startDateTime.tm_sec  = 0;   // seconds
+        dataBuffer.startDateTime.tm_min  = 0;   // minutes
+        dataBuffer.startDateTime.tm_hour = 0;   // hours
+        dataBuffer.startDateTime.tm_mday = 0;   // day
+        dataBuffer.startDateTime.tm_mon  = 0;   // month
+        dataBuffer.startDateTime.tm_year = 0;   // year
         dataBuffer.useDateTimes = false;
 
         dataBuffer.dataSource = "Forecast";

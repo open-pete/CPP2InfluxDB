@@ -47,7 +47,7 @@ LogWriter::LogWriter(const LogWriter& logWriter_) {
  */
 LogWriter& LogWriter::operator=(const LogWriter& logWriter_) {
     // check for identical addresses
-    if (this == logWriter_) {
+    if (this == &logWriter_) {
         return *this;
     }
 

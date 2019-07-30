@@ -67,7 +67,7 @@ void DBInterface::writeToDataBase(DataBuffer& dataBuffer_) {
                 }
             } else {
                 // if no date-time is specified use local time (cut down to current hour)
-                int currentLocalDateTime = getCurrentDateTimeAsUnixTime();
+                int currentLocalDateTime = getCurrentDateTimeAsUnixTime() + 60 * 60 * 2;
                 string startDateTime = to_string(currentLocalDateTime);
                 httpRequestPostFields << " " << startDateTime;
             }
@@ -147,7 +147,19 @@ vector<DataBuffer> DBInterface::readFromDataBase(DataBuffer& dataBuffer_) {
 
             // convert json to vector of DataBuffer
             result = jsonToDataBufferVector(answerJSON,dataBuffer_.dataSource);
+            if (! dataBuffer_.useDateTimes) {
+                for (unsigned int i=0; i < result.size();i++){
+                    result[i].startDateTime.tm_sec  = 0;   // seconds
+                    result[i].startDateTime.tm_min  = 0;   // minutes
+                    result[i].startDateTime.tm_hour = 0;   // hours
+                    result[i].startDateTime.tm_mday = 0;   // day
+                    result[i].startDateTime.tm_mon  = 0;   // month
+                    result[i].startDateTime.tm_year = 0;   // year
 
+                    result[i].endDateTime = result[i].startDateTime;
+                    result[i].useDateTimes = false;
+                }
+            }
         }
     } else {
         log << SLevel(ERROR) << "Aborted reading from database because of status not OK" << endl;

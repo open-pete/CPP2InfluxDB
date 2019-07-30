@@ -20,11 +20,15 @@
 #include <sstream>
 #include <algorithm>
 #include <iomanip>
+#include <vector>
 // ---
 #include "DataBuffer.h"
 #include "config.h"
 #include "logwriter.h"
 #include "HTTPRequest.h"
+
+
+using namespace std;
 
 /**
  * DBInterface class
