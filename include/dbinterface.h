@@ -24,7 +24,7 @@
 // ---
 #include "DataBuffer.h"
 #include "config.h"
-#include "logwriter.h"
+#include "open-pete/Log-Writer/include/LogWriter.h"
 #include "HTTPRequest.h"
 
 

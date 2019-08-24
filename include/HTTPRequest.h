@@ -4,7 +4,7 @@
 #include <curl/curl.h>
 #include <iostream>
 // ---
-#include "logwriter.h"
+#include "open-pete/Log-Writer/include/LogWriter.h"
 #include "config.h"
 
 /**
