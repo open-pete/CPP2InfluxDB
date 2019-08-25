@@ -19,6 +19,9 @@ install:
 script:
   - echo "clone dependency repos"
   - influx -version
+  - netstat -tuln
+  - ip a
+  - ifconfig
   - curl -i -XPOST http://localhost:8086/query --data-urlencode "q=CREATE DATABASE mydb"
   - repoURL="https://github.com/${TRAVIS_REPO_SLUG}.git"
   - branch=${TRAVIS_BRANCH}
