@@ -55,3 +55,8 @@ desktop.ini
 
 # Editors temporary files 
 *~
+
+# Easy Depend
+EasyDepend*
+__pycache__
+example.py
