@@ -19,19 +19,19 @@ INCLUDEPATH += include/
 
 
 SOURCES += main.cpp \
+    open-pete/Log-Writer/src/LogWriter.cpp \
+    open-pete/Log-Writer/src/SLevel.cpp \
     src/DataBuffer.cpp \
     src/dbinterface.cpp \
-    src/logwriter.cpp \
-    src/slevel.cpp \
     src/HTTPRequest.cpp
 
 HEADERS += \
     include/config.h \
     include/DataBuffer.h \
     include/dbinterface.h \
-    include/logwriter.h \
-    include/slevel.h \
     include/HTTPRequest.h \
-    include/catch.hpp
+    include/catch.hpp \
+    open-pete/Log-Writer/include/LogWriter.h \
+    open-pete/Log-Writer/include/SLevel.h
 
 LIBS += -lcurl
