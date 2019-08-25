@@ -1,0 +1,21 @@
+sudo: required
+dist: trusty
+
+before_install:
+  - sudo add-apt-repository --yes ppa:beineri/opt-qt551-trusty
+  - sudo apt-get update -qq
+  - pip install --user cpp-coveralls
+
+install:
+  - sudo apt-get -y install qt55[QTPACKAGE]
+  - curl https://storage.googleapis.com/git-repo-downloads/repo > ~/bin/repo
+  - chmod a+x ~/bin/repo
+  - git config --global color.ui false
+  - sudo apt-get -y install python3-pip
+  - sudo pip3 install gitpython
+  - wget https://dl.influxdata.com/influxdb/releases/influxdb_1.7.7_amd64.deb
+  - sudo dpkg -i influxdb_1.7.7_amd64.deb
+
+script:
+  - echo "clone dependency repos"
+  - influx -version
