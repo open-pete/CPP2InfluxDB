@@ -19,3 +19,16 @@ install:
 script:
   - echo "clone dependency repos"
   - influx -version
+  - repoURL="https://github.com/${TRAVIS_REPO_SLUG}.git"
+  - branch=${TRAVIS_BRANCH}
+  - manifest="default.xml"
+  - git clone https://github.com/mezorian/EasyDepend.git
+  - cp EasyDepend/*.py .
+  - python3 example.py
+  - ls -la
+  - echo "start build"
+  - source /opt/qt55/bin/qt55-env.sh
+  - /opt/qt55/bin/qmake
+  - make clean
+  - make
+- ./DBInterface
