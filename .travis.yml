@@ -31,4 +31,4 @@ script:
   - /opt/qt55/bin/qmake
   - make clean
   - make
-- ./DBInterface
+  - ./DBInterface
