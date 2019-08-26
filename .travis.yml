@@ -19,9 +19,9 @@ install:
 script:
   - echo "clone dependency repos"
   - influx -version
-  - sudo systemctl status influxd.service
-  - sudo systemctl start influxd.service
-  - sudo systemctl status influxd.service
+  - sudo service influxdb status
+  - sudo service influxdb start
+  - sudo service influxdb status
   - sleep 120
   - cat /etc/influxdb/influxdb.conf
   - netstat -tuln
