@@ -18,15 +18,10 @@ install:
 
 script:
   - echo "clone dependency repos"
-  - influx -version
-  - sudo service influxdb status
   - sudo service influxdb start
   - sudo service influxdb status
-  - sleep 120
-  - cat /etc/influxdb/influxdb.conf
   - netstat -tuln
   - ip a
-  - ifconfig
   - curl -i -XPOST http://localhost:8086/query --data-urlencode "q=CREATE DATABASE mydb"
   - repoURL="https://github.com/${TRAVIS_REPO_SLUG}.git"
   - branch=${TRAVIS_BRANCH}
