@@ -19,6 +19,8 @@ install:
 script:
   - echo "clone dependency repos"
   - influx -version
+  - influx 
+  - exit
   - sleep 120
   - cat /etc/influxdb/influxdb.conf
   - netstat -tuln
