@@ -67,7 +67,7 @@ void DBInterface::writeToDataBase(DataBuffer& dataBuffer_) {
                 }
             } else {
                 // if no date-time is specified use local time (cut down to current hour)
-                int currentLocalDateTime = getCurrentDateTimeAsUnixTime() + 60 * 60 * 2;
+                int currentLocalDateTime = getCurrentDateTimeAsUnixTime() + 60 * 60 * TIME_ZONE;
                 string startDateTime = to_string(currentLocalDateTime);
                 httpRequestPostFields << " " << startDateTime;
             }
