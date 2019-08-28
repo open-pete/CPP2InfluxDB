@@ -72,6 +72,7 @@ void DBInterface::writeToDataBase(DataBuffer& dataBuffer_) {
                 httpRequestPostFields << " " << startDateTime;
             }
             HTTPRequest req;
+            log << SLevel(INFO) << "curl : " << httpRequestUrl.str() << " -> " << httpRequestPostFields.str() << endl;
             bool noFailure = req.post(httpRequestUrl.str(),httpRequestPostFields.str());
             setDBFailure(!noFailure);
         }
