@@ -37,5 +37,7 @@ script:
   - make
   - ./DBInterface
   - curl -G 'http://localhost:8086/query?pretty=true' --data-urlencode "db=WeatherData2" --data-urlencode "q=SELECT * FROM \"point\""
+  - offset=$(date +%z)
+  - echo "$offset"
   - ls -la
   - cat LogFile.txt
