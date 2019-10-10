@@ -56,13 +56,13 @@ void DBInterface::writeToDataBase(DataBuffer& dataBuffer_) {
             }
             // create datetime-string
             if (dataBuffer_.useDateTimes) {
-                if (dataBuffer_.startDateTime.tm_year <= 1971) {
+                if (dataBuffer_.startDateTime.years() <= 1971) {
                     log << SLevel(ERROR) << "Aborted writing to database because of invalid datetime. " <<
                     "Please use only years bigger than 1971." << endl;
                     setDBFailure(true);
                     return;
                 } else {
-                    string startDateTime = cTimeToString(dataBuffer_.startDateTime,true);
+                    string startDateTime = to_string(dataBuffer_.startDateTime.toUnixTime()); // TODO
                     httpRequestPostFields << " " << startDateTime;
                 }
             } else {
@@ -88,6 +88,7 @@ void DBInterface::writeToDataBase(DataBuffer& dataBuffer_) {
  * @return returns the requested dataBuffer_ which now contains requested data
  */
 vector<DataBuffer> DBInterface::readFromDataBase(DataBuffer& dataBuffer_) {
+
     // create empty result
     vector<DataBuffer> result;
 
@@ -120,21 +121,21 @@ vector<DataBuffer> DBInterface::readFromDataBase(DataBuffer& dataBuffer_) {
 
             // add requested datetime-range
             if (dataBuffer_.useDateTimes) {
-                if ( (dataBuffer_.startDateTime.tm_year <= 1971) ||
-                     (dataBuffer_.endDateTime.tm_year   <= 1971) ){
+                if ( (dataBuffer_.startDateTime.years() <= 1971) ||
+                     (dataBuffer_.endDateTime.years()   <= 1971) ){
                     log << SLevel(ERROR) << "Aborted reading from database because of invalid datetime. " <<
                     "Please use only years bigger than 1971." << endl;
                     setDBFailure(true);
                     return result;
                 }
-                string startDateTime = cTimeToString(dataBuffer_.startDateTime,false);
-                string   endDateTime = cTimeToString(  dataBuffer_.endDateTime,false);
+                string startDateTime = cTimeToString(dataBuffer_.startDateTime,false); // TODO
+                string   endDateTime = cTimeToString(  dataBuffer_.endDateTime,false); // TODO
                 httpRequestUrl << "+and+time+>=+'" << startDateTime << "'";
                 httpRequestUrl << "+and+time+<=+'" <<   endDateTime << "'";
             } else {
                 // if no date-time is specified use local time (cut down to current hour)
                 struct tm currentLocalDateTime = getCurrentDateTime();
-                string startDateTime = cTimeToString(currentLocalDateTime,false);
+                string startDateTime = cTimeToString(currentLocalDateTime,false); // TODO
                 string   endDateTime = startDateTime;
                 httpRequestUrl << "+and+time+>=+'" << startDateTime << "'";
                 httpRequestUrl << "+and+time+<=+'" <<   endDateTime << "'";
@@ -150,12 +151,12 @@ vector<DataBuffer> DBInterface::readFromDataBase(DataBuffer& dataBuffer_) {
             result = jsonToDataBufferVector(answerJSON,dataBuffer_.dataSource);
             if (! dataBuffer_.useDateTimes) {
                 for (unsigned int i=0; i < result.size();i++){
-                    result[i].startDateTime.tm_sec  = 0;   // seconds
-                    result[i].startDateTime.tm_min  = 0;   // minutes
-                    result[i].startDateTime.tm_hour = 0;   // hours
-                    result[i].startDateTime.tm_mday = 0;   // day
-                    result[i].startDateTime.tm_mon  = 0;   // month
-                    result[i].startDateTime.tm_year = 0;   // year
+                    result[i].startDateTime.seconds(0);   // seconds
+                    result[i].startDateTime.minutes(0);   // minutes
+                    result[i].startDateTime.hours(0);     // hours
+                    result[i].startDateTime.days(0);      // day
+                    result[i].startDateTime.months(0);    // month
+                    result[i].startDateTime.years(0);     // year
 
                     result[i].endDateTime = result[i].startDateTime;
                     result[i].useDateTimes = false;
@@ -249,7 +250,7 @@ void DBInterface::createIfNotCreatedDataBase() {
  */
 string DBInterface::cleanString(const string &stringToClean_) {
     string result = stringToClean_;
-    // remove everythin that not is not alphanum and that is not _
+    // remove everything that not is not alphanum and that is not _
     result.erase(
                   remove_if( result.begin(), result.end(),
                              [](char c) { return !(isalnum(c) || (c == '_') ) ; }
@@ -419,42 +420,6 @@ tm DBInterface::stringToCTime(const string &dateTimeString_) {
     return result;
 }
 
-/**
- * DBInterface::getCurrentDateTime
- * @brief gets current local time and outputs it
- * @return returns current local time as tm struct
- */
-tm DBInterface::getCurrentDateTime(bool cutToHours_) {
-    // create time variable
-    time_t  secondsSince1970;
-    struct tm *result;
-    time ( &secondsSince1970 );
-    result = localtime ( &secondsSince1970 );
-    result->tm_year += 1900;
-    result->tm_mon  += 1;
-    result->tm_isdst = 0;
-    if (cutToHours_) {
-        result->tm_min = 0;
-        result->tm_sec = 0;
-    }
-    return *result;
-}
-
-
-/**
- * DBInterface::getCurrentDateTime
- * @brief gets current local time and outputs it
- * @return returns current local time as seconds since 1970
- */
-int DBInterface::getCurrentDateTimeAsUnixTime(bool cutToHours_) {
-    struct tm temp = getCurrentDateTime(cutToHours_);
-    temp.tm_mon  -= 1;    // month (0 bis 11)
-    temp.tm_year -= 1900; // Year (calender-year minus 1900)
-    temp.tm_isdst = 1;    // converting us-summer-time
-
-    time_t secondsSince1970 = mktime(&temp);
-    return secondsSince1970;
-}
 
 /**
  * DBInterface::jsonToDataBufferVector
@@ -500,7 +465,7 @@ vector<DataBuffer> DBInterface::jsonToDataBufferVector(const string &json_, cons
 
                         // set time
                         if (name == "time") {
-                            struct tm time = stringToCTime(valueJSON.toString().toStdString());
+                            struct tm time = stringToCTime(valueJSON.toString().toStdString()); // TODO
                             tempDataBuffer.useDateTimes = true;
                             tempDataBuffer.startDateTime = time;
                             tempDataBuffer.endDateTime   = time;
