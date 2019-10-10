@@ -335,7 +335,7 @@ string DBInterface::cTimeToString(tm datetime_, bool inUnixTime_) {
 
         }
 
-        datetime_.tm_hour += 2;    // hours (0 to 23)
+        datetime_.tm_hour += 0;    // hours (0 to 23)
         datetime_.tm_mon  -= 1;    // month (0 bis 11)
         datetime_.tm_year -= 1900; // Year (calender-year minus 1900)
         datetime_.tm_isdst = 1;    // converting us-summer-time

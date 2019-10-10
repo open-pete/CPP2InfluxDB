@@ -63,12 +63,12 @@ TEST_CASE("DBInterface, write/read to/from database, getDBFailure") {
 
     SECTION ("write / read valid databuffer") {
         //2015-06-11T20:46:02
-        dataBuffer.startDateTime.tm_sec  = 2;    // seconds
-        dataBuffer.startDateTime.tm_min  = 46;   // minutes
-        dataBuffer.startDateTime.tm_hour = 20;   // hours
-        dataBuffer.startDateTime.tm_mday = 11;   // day
-        dataBuffer.startDateTime.tm_mon  = 6;    // month
-        dataBuffer.startDateTime.tm_year = 2015; // Year
+        dataBuffer.startDateTime.seconds(2);    // seconds
+        dataBuffer.startDateTime.minutes(46);   // minutes
+        dataBuffer.startDateTime.hours(20);     // hours
+        dataBuffer.startDateTime.days(11);      // day
+        dataBuffer.startDateTime.months(6);     // month
+        dataBuffer.startDateTime.years(2015);   // year
 
         dataBuffer.endDateTime = dataBuffer.startDateTime;
         dataBuffer.useDateTimes = true;
@@ -89,12 +89,12 @@ TEST_CASE("DBInterface, write/read to/from database, getDBFailure") {
     }
 
     SECTION ("write / read date = 01.01.1972") {
-        dataBuffer.startDateTime.tm_sec  = 0;   // seconds
-        dataBuffer.startDateTime.tm_min  = 0;   // minutes
-        dataBuffer.startDateTime.tm_hour = 0;   // hours
-        dataBuffer.startDateTime.tm_mday = 1;   // day
-        dataBuffer.startDateTime.tm_mon  = 1;    // month
-        dataBuffer.startDateTime.tm_year = 1972; // Year
+        dataBuffer.startDateTime.seconds(0);    // seconds
+        dataBuffer.startDateTime.minutes(0);    // minutes
+        dataBuffer.startDateTime.hours(0);      // hours
+        dataBuffer.startDateTime.days(1);       // day
+        dataBuffer.startDateTime.months(1);     // month
+        dataBuffer.startDateTime.years(1972);    // year
 
         dataBuffer.endDateTime = dataBuffer.startDateTime;
         dataBuffer.useDateTimes = true;
@@ -115,12 +115,12 @@ TEST_CASE("DBInterface, write/read to/from database, getDBFailure") {
     }
 
     SECTION ("write / read date < 01.01.1972") {
-        dataBuffer.startDateTime.tm_sec  = 0;   // seconds
-        dataBuffer.startDateTime.tm_min  = 0;   // minutes
-        dataBuffer.startDateTime.tm_hour = 0;   // hours
-        dataBuffer.startDateTime.tm_mday = 31;   // day
-        dataBuffer.startDateTime.tm_mon  = 12;    // month
-        dataBuffer.startDateTime.tm_year = 1971; // Year
+        dataBuffer.startDateTime.seconds(0);    // seconds
+        dataBuffer.startDateTime.minutes(0);    // minutes
+        dataBuffer.startDateTime.hours(0);      // hours
+        dataBuffer.startDateTime.days(31);      // day
+        dataBuffer.startDateTime.months(12);    // month
+        dataBuffer.startDateTime.years(1971);   // year
 
         dataBuffer.endDateTime = dataBuffer.startDateTime;
         dataBuffer.useDateTimes = true;
@@ -143,12 +143,12 @@ TEST_CASE("DBInterface, write/read to/from database, getDBFailure") {
 
 
     SECTION ("write / read valid values") {
-        dataBuffer.startDateTime.tm_sec  = 0;   // seconds
-        dataBuffer.startDateTime.tm_min  = 0;   // minutes
-        dataBuffer.startDateTime.tm_hour = 0;   // hours
-        dataBuffer.startDateTime.tm_mday = 31;   // day
-        dataBuffer.startDateTime.tm_mon  = 12;   // month
-        dataBuffer.startDateTime.tm_year = 1972; // Year
+        dataBuffer.startDateTime.seconds(0);    // seconds
+        dataBuffer.startDateTime.minutes(0);    // minutes
+        dataBuffer.startDateTime.hours(0);      // hours
+        dataBuffer.startDateTime.days(31);      // day
+        dataBuffer.startDateTime.months(12);    // month
+        dataBuffer.startDateTime.years(1972);   // year
 
         dataBuffer.endDateTime = dataBuffer.startDateTime;
         dataBuffer.useDateTimes = true;
@@ -172,12 +172,12 @@ TEST_CASE("DBInterface, write/read to/from database, getDBFailure") {
     }
 
     SECTION ("write / read with current local time") {
-        dataBuffer.startDateTime.tm_sec  = 0;   // seconds
-        dataBuffer.startDateTime.tm_min  = 0;   // minutes
-        dataBuffer.startDateTime.tm_hour = 0;   // hours
-        dataBuffer.startDateTime.tm_mday = 0;   // day
-        dataBuffer.startDateTime.tm_mon  = 0;   // month
-        dataBuffer.startDateTime.tm_year = 0;   // year
+        dataBuffer.startDateTime.seconds(0);   // seconds
+        dataBuffer.startDateTime.minutes(0);   // minutes
+        dataBuffer.startDateTime.hours(0);     // hours
+        dataBuffer.startDateTime.days(0);      // day
+        dataBuffer.startDateTime.months(0);    // month
+        dataBuffer.startDateTime.years(0);     // year
         dataBuffer.useDateTimes = false;
 
         dataBuffer.dataSource = "Forecast";
@@ -202,12 +202,12 @@ TEST_CASE("DBInterface, write/read to/from database, getDBFailure") {
         // invalid values get cut to range
         // invalid extra signs get removed
         // (alphabetical chars, numbers and '_' are allowed)
-        dataBuffer.startDateTime.tm_sec  = 59;   // seconds
-        dataBuffer.startDateTime.tm_min  = 59;   // minutes
-        dataBuffer.startDateTime.tm_hour = 1;   // hours
-        dataBuffer.startDateTime.tm_mday = 10;   // day
-        dataBuffer.startDateTime.tm_mon  = 8;   // month
-        dataBuffer.startDateTime.tm_year = 2016; // Year
+        dataBuffer.startDateTime.seconds(59);   // seconds
+        dataBuffer.startDateTime.minutes(59);   // minutes
+        dataBuffer.startDateTime.hours(1);      // hours
+        dataBuffer.startDateTime.days(10);      // day
+        dataBuffer.startDateTime.months(8);     // month
+        dataBuffer.startDateTime.years(2016);   // year
 
         dataBuffer.endDateTime = dataBuffer.startDateTime;
         dataBuffer.useDateTimes = true;

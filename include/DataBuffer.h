@@ -14,6 +14,7 @@
 #include <string>
 #include <iostream>
 #include <time.h>
+#include "DateTimePP.h"
 
 using namespace std;
 
@@ -24,11 +25,12 @@ using namespace std;
  * DataBuffer provides "data" (a map of string and double),
  * which can be used by two software modules to exchange data.
  */
-struct DataBuffer{
+struct DataBuffer{ // TODO -> class
     // dateTimes;
     bool useDateTimes = false;
-    struct tm startDateTime = { .tm_sec = 0, .tm_min  = 0, .tm_hour = 0, .tm_mday = 0, .tm_mon  = 0, .tm_year = 0};
-    struct tm endDateTime   = { .tm_sec = 0, .tm_min  = 0, .tm_hour = 0, .tm_mday = 0, .tm_mon  = 0, .tm_year = 0};
+
+    DateTimePP startDateTime;
+    DateTimePP endDateTime;
 
     // data-source
     string dataSource;
@@ -41,8 +43,6 @@ struct DataBuffer{
     bool operator== (DataBuffer& other_);
     friend ostream& operator<<(ostream& oStream_,DataBuffer dataBuffer_);
 
-    // miscellaneous
-    bool compareCTimeEqual(struct tm time1_, struct tm time2_) ;
 };
 
 /**
@@ -54,7 +54,7 @@ struct DataBuffer{
  *  - two 'double' values minValue and maxValue
  *  -     'string' value  unitOfMeasure
  */
-struct DataBufferProperties {
+struct DataBufferProperties { // TODO --> maybe deprecated --> if needed move into class
     double minValue;
     double maxValue;
     string unitOfMeasure;
@@ -68,7 +68,7 @@ struct DataBufferProperties {
  *        and output values within the neural network
  *
  */
-const map<string,DataBufferProperties> possibleDataBufferValues = {
+const map<string,DataBufferProperties> possibleDataBufferValues = { // TODO --> maybe deprecated --> if needed move into class
    // name         | min | max | unit of measure
    //------------------------------------------
     {"Temperature",{    0,   10, "Degree Celsius"  }},

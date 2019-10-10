@@ -102,7 +102,6 @@ string HTTPRequest::get(const string &url_) {
             return "";
         }
 
-
         // clean up
         curl_easy_cleanup(curl);
         curl_global_cleanup();
