@@ -27,13 +27,6 @@ SOURCES += main.cpp \
     mezorian/DateTimePP/src/DateTimePPGeneralMisc.cpp \
     mezorian/DateTimePP/src/DateTimePPOperator.cpp \
     mezorian/DateTimePP/src/DateTimePPUnixTime.cpp \
-    mezorian/DateTimePP/test/ArithmeticsTest.cpp \
-    mezorian/DateTimePP/test/CurrentTimeTest.cpp \
-    mezorian/DateTimePP/test/DateTimeInfoTest.cpp \
-    mezorian/DateTimePP/test/DateTimePPTest.cpp \
-    mezorian/DateTimePP/test/GeneralMiscTest.cpp \
-    mezorian/DateTimePP/test/OperatorTest.cpp \
-    mezorian/DateTimePP/test/UnixTimeTest.cpp \
     open-pete/Log-Writer/src/LogWriter.cpp \
     open-pete/Log-Writer/src/SLevel.cpp \
     src/DataBuffer.cpp \

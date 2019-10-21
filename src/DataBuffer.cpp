@@ -40,8 +40,8 @@ bool DataBuffer::operator==(DataBuffer &other_) {
    if ( ( (*this).dataSource    != other_.dataSource   ) ||
         ( (*this).useDataSource != other_.useDataSource) ||
         ( (*this).useDateTimes  != other_.useDateTimes ) ||
-        ( (*this).startDateTime == other_.startDateTime) ||
-        ( (*this).endDateTime   == other_.endDateTime  ) ){
+        ( (*this).startDateTime != other_.startDateTime) ||
+        ( (*this).endDateTime   != other_.endDateTime  ) ){
        result = false;
    }
 
@@ -55,7 +55,6 @@ bool DataBuffer::operator==(DataBuffer &other_) {
            break;
        }
    }
-
 
    return result;
 

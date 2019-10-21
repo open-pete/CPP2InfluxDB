@@ -171,7 +171,7 @@ TEST_CASE("DBInterface, write/read to/from database, getDBFailure") {
         REQUIRE(dbi.getDBFailure() == false);
     }
 
-    SECTION ("write / read with current local time") {
+    SECTION ("write / read with current UTC time") {
         dataBuffer.startDateTime.seconds(0);   // seconds
         dataBuffer.startDateTime.minutes(0);   // minutes
         dataBuffer.startDateTime.hours(0);     // hours
