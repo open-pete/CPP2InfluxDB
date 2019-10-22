@@ -1,7 +1,7 @@
 #define CATCH_CONFIG_MAIN  // This tells Catch to provide a main() - only do this in one cpp file
 #include "catch.hpp"
 #include <float.h>
-#include "dbinterface.h"
+#include "CPP2InfluxDB.h"
 
 TEST_CASE( "HTTPRequest.post works") {
     HTTPRequest req;
@@ -53,10 +53,10 @@ TEST_CASE( "HTTPRequest.get works") {
 }
 
 
-TEST_CASE("DBInterface, write/read to/from database, getDBFailure") {
+TEST_CASE("CPP2InfluxDB, write/read to/from database, getDBFailure") {
     DataBuffer dataBuffer, dataBuffer2;
 
-    DBInterface& dbi = DBInterface::getInstance();
+    CPP2InfluxDB& dbi = CPP2InfluxDB::getInstance();
     dbi.init();
 
     dbi.writeStatusOK(true);
@@ -247,7 +247,7 @@ TEST_CASE("DBInterface, write/read to/from database, getDBFailure") {
 }
 
 TEST_CASE ("Write / Read Status") {
-    DBInterface& dbi = DBInterface::getInstance();
+    CPP2InfluxDB& dbi = CPP2InfluxDB::getInstance();
     dbi.init();
 
     SECTION("Write/Read of true works") {

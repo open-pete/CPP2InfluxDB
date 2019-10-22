@@ -1,13 +1,13 @@
 /**
- * DBInterface.h
- * Purpose: defines class DBInterface
+ * CPP2InfluxDB.h
+ * Purpose: defines class CPP2InfluxDB
  *
  * @author Wall.Of.Death
  * @version 1.0 20160704
  */
 
-#ifndef DBINTERFACE_H
-#define DBINTERFACE_H
+#ifndef CPP2InfluxDB_H
+#define CPP2InfluxDB_H
 
 // todo
 #include <QStringList>
@@ -31,20 +31,20 @@
 using namespace std;
 
 /**
- * DBInterface class
- * @brief DBInterface provides access to the database
- * The DBInterface class provides acces to the database by having public functions for
+ * CPP2InfluxDB class
+ * @brief CPP2InfluxDB provides access to the database
+ * The CPP2InfluxDB class provides acces to the database by having public functions for
  * initializing, reading and writing data to the database.
  * It is designed by the design pattern singleton.
  */
-class DBInterface {
+class CPP2InfluxDB {
     public:
         /* --- needed to create a singleton --- */
-        static DBInterface& getInstance() {
-            static DBInterface _instance;
+        static CPP2InfluxDB& getInstance() {
+            static CPP2InfluxDB _instance;
             return _instance;
         }
-        ~DBInterface() {}
+        ~CPP2InfluxDB() {}
 
         /* --- interfacing the database --- */
         void               init             ();
@@ -57,10 +57,10 @@ class DBInterface {
 
     private:
         /* --- needed to create a singleton --- */
-        DBInterface() {};                  // must be private to avoid the creation of DBInterface from the outside by the constructor
+        CPP2InfluxDB() {};                  // must be private to avoid the creation of CPP2InfluxDB from the outside by the constructor
                                            // use 'protected' if you want to inherit from this class
-        DBInterface            (const DBInterface& dbInterface_); // must be private to avoid creation of another DBInterface-instance by copy-constructor
-        DBInterface& operator= (const DBInterface& dbInterface_); // must be private to avoid creating an new DBInterface-instance by copying
+        CPP2InfluxDB            (const CPP2InfluxDB& CPP2InfluxDB_); // must be private to avoid creation of another CPP2InfluxDB-instance by copy-constructor
+        CPP2InfluxDB& operator= (const CPP2InfluxDB& CPP2InfluxDB_); // must be private to avoid creating an new CPP2InfluxDB-instance by copying
 
         /* --- interfacing the database --- */
         void createIfNotCreatedDataBase();
@@ -74,4 +74,4 @@ class DBInterface {
         vector<DataBuffer> jsonToDataBufferVector(const string& json_, const string &dataSource_);
 };
 
-#endif // DBINTERFACE_H
+#endif // CPP2InfluxDB_H
