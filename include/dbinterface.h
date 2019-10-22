@@ -71,11 +71,6 @@ class DBInterface {
         /* --- miscellaneous --- */
         string cleanString(const string& stringToClean_);
         double cutValueToInfluxDBRange(double val_);
-        string deletePaddingZeros(const string& stringWithPaddingZeros_);
-        string cTimeToString(struct tm datetime_, bool inUnixTime_);
-        struct tm stringToCTime(const string& dateTimeString_);
-        struct tm getCurrentDateTime(bool cutToHours_ = true);
-        int getCurrentDateTimeAsUnixTime(bool cutToHours_ = true);
         vector<DataBuffer> jsonToDataBufferVector(const string& json_, const string &dataSource_);
 };
 

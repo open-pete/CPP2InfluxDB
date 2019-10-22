@@ -15,10 +15,18 @@ CONFIG   += c++11
 
 TEMPLATE = app
 
-INCLUDEPATH += include/
+INCLUDEPATH += include/ \
+               mezorian/DateTimePP/include
 
 
 SOURCES += main.cpp \
+    mezorian/DateTimePP/src/DateTimePP.cpp \
+    mezorian/DateTimePP/src/DateTimePPArithmetics.cpp \
+    mezorian/DateTimePP/src/DateTimePPCurrentTime.cpp \
+    mezorian/DateTimePP/src/DateTimePPDateTimeInfo.cpp \
+    mezorian/DateTimePP/src/DateTimePPGeneralMisc.cpp \
+    mezorian/DateTimePP/src/DateTimePPOperator.cpp \
+    mezorian/DateTimePP/src/DateTimePPUnixTime.cpp \
     open-pete/Log-Writer/src/LogWriter.cpp \
     open-pete/Log-Writer/src/SLevel.cpp \
     src/DataBuffer.cpp \
@@ -31,6 +39,7 @@ HEADERS += \
     include/dbinterface.h \
     include/HTTPRequest.h \
     include/catch.hpp \
+    mezorian/DateTimePP/include/DateTimePP.h \
     open-pete/Log-Writer/include/LogWriter.h \
     open-pete/Log-Writer/include/SLevel.h
 

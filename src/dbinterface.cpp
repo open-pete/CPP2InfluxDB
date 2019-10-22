@@ -56,22 +56,25 @@ void DBInterface::writeToDataBase(DataBuffer& dataBuffer_) {
             }
             // create datetime-string
             if (dataBuffer_.useDateTimes) {
-                if (dataBuffer_.startDateTime.tm_year <= 1971) {
+                if (dataBuffer_.startDateTime.years() < 1970) {
                     log << SLevel(ERROR) << "Aborted writing to database because of invalid datetime. " <<
-                    "Please use only years bigger than 1971." << endl;
+                    "Please use only dates >= 01.01.1970." << endl;
                     setDBFailure(true);
                     return;
                 } else {
-                    string startDateTime = cTimeToString(dataBuffer_.startDateTime,true);
+                    string startDateTime = to_string(dataBuffer_.startDateTime.toUnixTime());
                     httpRequestPostFields << " " << startDateTime;
                 }
             } else {
-                // if no date-time is specified use local time (cut down to current hour)
-                int currentLocalDateTime = getCurrentDateTimeAsUnixTime() + 60 * 60 * 2;
+                // if no date-time is specified use current UTC time (cut down to current hour)
+                DateTimePP dt;
+                dt.now(true);
+                int currentLocalDateTime = dt.toUnixTime();
                 string startDateTime = to_string(currentLocalDateTime);
                 httpRequestPostFields << " " << startDateTime;
             }
             HTTPRequest req;
+            log << SLevel(INFO) << "curl : " << httpRequestUrl.str() << " -> " << httpRequestPostFields.str() << endl;
             bool noFailure = req.post(httpRequestUrl.str(),httpRequestPostFields.str());
             setDBFailure(!noFailure);
         }
@@ -87,6 +90,7 @@ void DBInterface::writeToDataBase(DataBuffer& dataBuffer_) {
  * @return returns the requested dataBuffer_ which now contains requested data
  */
 vector<DataBuffer> DBInterface::readFromDataBase(DataBuffer& dataBuffer_) {
+
     // create empty result
     vector<DataBuffer> result;
 
@@ -119,26 +123,28 @@ vector<DataBuffer> DBInterface::readFromDataBase(DataBuffer& dataBuffer_) {
 
             // add requested datetime-range
             if (dataBuffer_.useDateTimes) {
-                if ( (dataBuffer_.startDateTime.tm_year <= 1971) ||
-                     (dataBuffer_.endDateTime.tm_year   <= 1971) ){
+                if ( (dataBuffer_.startDateTime.years() < 1970) ||
+                     (dataBuffer_.endDateTime.years()   < 1970) ){
                     log << SLevel(ERROR) << "Aborted reading from database because of invalid datetime. " <<
-                    "Please use only years bigger than 1971." << endl;
+                    "Please use only dates >= 01.01.1970 ." << endl;
                     setDBFailure(true);
                     return result;
                 }
-                string startDateTime = cTimeToString(dataBuffer_.startDateTime,false);
-                string   endDateTime = cTimeToString(  dataBuffer_.endDateTime,false);
+                DateTimePP dt = dataBuffer_.startDateTime;
+                string startDateTime = dt.toString();
+                dt = dataBuffer_.endDateTime;
+                string   endDateTime = dt.toString();
                 httpRequestUrl << "+and+time+>=+'" << startDateTime << "'";
                 httpRequestUrl << "+and+time+<=+'" <<   endDateTime << "'";
             } else {
                 // if no date-time is specified use local time (cut down to current hour)
-                struct tm currentLocalDateTime = getCurrentDateTime();
-                string startDateTime = cTimeToString(currentLocalDateTime,false);
+                DateTimePP currentUTCDateTime;
+                currentUTCDateTime.now(true);
+                string startDateTime = currentUTCDateTime.toString();
                 string   endDateTime = startDateTime;
                 httpRequestUrl << "+and+time+>=+'" << startDateTime << "'";
                 httpRequestUrl << "+and+time+<=+'" <<   endDateTime << "'";
             }
-
 
             // execute request
             HTTPRequest req;
@@ -149,12 +155,12 @@ vector<DataBuffer> DBInterface::readFromDataBase(DataBuffer& dataBuffer_) {
             result = jsonToDataBufferVector(answerJSON,dataBuffer_.dataSource);
             if (! dataBuffer_.useDateTimes) {
                 for (unsigned int i=0; i < result.size();i++){
-                    result[i].startDateTime.tm_sec  = 0;   // seconds
-                    result[i].startDateTime.tm_min  = 0;   // minutes
-                    result[i].startDateTime.tm_hour = 0;   // hours
-                    result[i].startDateTime.tm_mday = 0;   // day
-                    result[i].startDateTime.tm_mon  = 0;   // month
-                    result[i].startDateTime.tm_year = 0;   // year
+                    result[i].startDateTime.seconds(0);   // seconds
+                    result[i].startDateTime.minutes(0);   // minutes
+                    result[i].startDateTime.hours(0);     // hours
+                    result[i].startDateTime.days(0);      // day
+                    result[i].startDateTime.months(0);    // month
+                    result[i].startDateTime.years(0);     // year
 
                     result[i].endDateTime = result[i].startDateTime;
                     result[i].useDateTimes = false;
@@ -248,7 +254,7 @@ void DBInterface::createIfNotCreatedDataBase() {
  */
 string DBInterface::cleanString(const string &stringToClean_) {
     string result = stringToClean_;
-    // remove everythin that not is not alphanum and that is not _
+    // remove everything that not is not alphanum and that is not _
     result.erase(
                   remove_if( result.begin(), result.end(),
                              [](char c) { return !(isalnum(c) || (c == '_') ) ; }
@@ -275,185 +281,6 @@ double DBInterface::cutValueToInfluxDBRange(double val_) {
     }
 }
 
-/**
- * DBInterface::deletePaddingZeros
- * @brief removes leading padding zeros from a given string
- * @param stringWithPaddingZeros_ string with padding zeros
- * @return return stringWithPaddingZeros_ without padding zeros
- *
- * NOTICE : if stringWithPaddingZeros_ consists of only zeros
- *          the function returns "0"
- */
-string DBInterface::deletePaddingZeros(const string &stringWithPaddingZeros_) {
-    string result = stringWithPaddingZeros_;
-    // erase leading zeros
-    result.erase(0, result.find_first_not_of('0'));
-    // if every char was a zero
-    // return only one zero
-    if (result == "") {
-        result = "0";
-    }
-    return result;
-}
-
-/**
- * DBInterface::cTimeToString
- * @brief convert a ctime struct to either a formatted string or the unix-time as string
- * @param datetime_ the struct which is to convert
- * @param inUnixTime_ function returns unix-time as string if true, otherwise returns a formatted DateTimeString
- * @return returns either a formatted string or the unix-time as string, depending on inUnixTime_
- *
- * This function can convert a ctime struct to either a formatted data-time-string
- *   e.g. 2016-08-09T16:40:57Z
- * or to the unix-time (seconds since 1970) as string
- *   e.g. 1434055562
- *
- * NOTICE : only the tm-fields tm_year, tm_mon, tm_mday, tm_hour, tm_min, tm_sec are supported
- * NOTICE : always set tm-fields to EXACTLY the values you want to see in string!
- *          all conversion because of zero-indexes or 1900-offset are calculated inside the function
- *
- * for example :
- *
- *  tm_sec  = 2;    // seconds
- *  tm_min  = 46;   // minutes
- *  tm_hour = 20;   // hours
- *  tm_mday = 11;   // day
- *  tm_mon  = 6;    // month
- *  tm_year = 2015; // Year
- *
- *  this returns the output
- *   2015-06-11T20:46:02Z or 1434055562
- */
-string DBInterface::cTimeToString(tm datetime_, bool inUnixTime_) {
-    stringstream dateTimeString;
-
-    if (inUnixTime_) {
-        // convert to number of seconds since 1979 (unix-time)
-        // e.g. 1434055562
-        if (datetime_.tm_hour == 0) {
-
-        }
-
-        datetime_.tm_hour += 2;    // hours (0 to 23)
-        datetime_.tm_mon  -= 1;    // month (0 bis 11)
-        datetime_.tm_year -= 1900; // Year (calender-year minus 1900)
-        datetime_.tm_isdst = 1;    // converting us-summer-time
-
-        time_t secondsSince1970 = mktime(&datetime_);
-        dateTimeString << secondsSince1970;
-    } else {
-        // convert to formatted string
-        // e.g. 2016-08-09T16:40:57Z
-        dateTimeString << datetime_.tm_year << "-" ;
-        dateTimeString << setfill('0') << setw(2);
-        dateTimeString << datetime_.tm_mon  << "-" ;
-        dateTimeString << setfill('0') << setw(2);
-        dateTimeString << datetime_.tm_mday << "T" ;
-        dateTimeString << setfill('0') << setw(2);
-        dateTimeString << datetime_.tm_hour << ":" ;
-        dateTimeString << setfill('0') << setw(2);
-        dateTimeString << datetime_.tm_min  << ":" ;
-        dateTimeString << setfill('0') << setw(2);
-        dateTimeString << datetime_.tm_sec  << "Z" ;
-    }
-    return dateTimeString.str();
-}
-
-/**
- * DBInterface::stringToCTime
- * @brief parse formatted date-time-string to ctime
- * @param dateTimeString_ formatted date-time-string
- * @return returns a struct tm (ctime) which contains the datetime of dateTimeString_
- *
- * converts a date-time-string which MUST be formatted like :
- * yyyy-mm-ddThh:mm:ssZ
- * see the following example on how the string has to be formatted :
- * 2016-08-09T16:40:57Z
- *
- * NOTICE : only the tm-fields tm_year, tm_mon, tm_mday, tm_hour, tm_min, tm_sec are supported
- *          the other fields are ALWAYS set to :
- *
- *              tm_wday   = 0;
- *              tm_yday   = 0;
- *              tm_zone   = "";
- *              tm_gmtoff = 0;
- *              tm_isdst  = 0;
- */
-tm DBInterface::stringToCTime(const string &dateTimeString_) {
-    //2016-08-09T16:40:57Z
-    struct tm result;
-    stringstream temp;
-    string substring;
-    // parse year
-    substring = dateTimeString_.substr(0,4);
-    result.tm_year = stoi(substring);
-    // parse month
-    substring = dateTimeString_.substr(5,2);
-    substring = deletePaddingZeros(substring);
-    result.tm_mon = stoi(substring);
-    // parse day
-    substring = dateTimeString_.substr(8,2);
-    substring = deletePaddingZeros(substring);
-    result.tm_mday = stoi(substring);
-    // parse hour
-    substring = dateTimeString_.substr(11,2);
-    substring = deletePaddingZeros(substring);
-    result.tm_hour = stoi(substring);
-    // parse minutes
-    substring = dateTimeString_.substr(14,2);
-    substring = deletePaddingZeros(substring);
-    result.tm_min = stoi(substring);
-    // parse seconds
-    substring = dateTimeString_.substr(17,2);
-    substring = deletePaddingZeros(substring);
-    result.tm_sec = stoi(substring);
-
-    // set unused tm_fields
-    result.tm_wday   = 0;
-    result.tm_yday   = 0;
-    result.tm_zone   = "";
-    result.tm_gmtoff = 0;
-    result.tm_isdst  = 0;
-
-    return result;
-}
-
-/**
- * DBInterface::getCurrentDateTime
- * @brief gets current local time and outputs it
- * @return returns current local time as tm struct
- */
-tm DBInterface::getCurrentDateTime(bool cutToHours_) {
-    // create time variable
-    time_t  secondsSince1970;
-    struct tm *result;
-    time ( &secondsSince1970 );
-    result = localtime ( &secondsSince1970 );
-    result->tm_year += 1900;
-    result->tm_mon  += 1;
-    result->tm_isdst = 0;
-    if (cutToHours_) {
-        result->tm_min = 0;
-        result->tm_sec = 0;
-    }
-    return *result;
-}
-
-
-/**
- * DBInterface::getCurrentDateTime
- * @brief gets current local time and outputs it
- * @return returns current local time as seconds since 1970
- */
-int DBInterface::getCurrentDateTimeAsUnixTime(bool cutToHours_) {
-    struct tm temp = getCurrentDateTime(cutToHours_);
-    temp.tm_mon  -= 1;    // month (0 bis 11)
-    temp.tm_year -= 1900; // Year (calender-year minus 1900)
-    temp.tm_isdst = 1;    // converting us-summer-time
-
-    time_t secondsSince1970 = mktime(&temp);
-    return secondsSince1970;
-}
 
 /**
  * DBInterface::jsonToDataBufferVector
@@ -499,10 +326,11 @@ vector<DataBuffer> DBInterface::jsonToDataBufferVector(const string &json_, cons
 
                         // set time
                         if (name == "time") {
-                            struct tm time = stringToCTime(valueJSON.toString().toStdString());
+                            DateTimePP dt;
+                            dt.fromString(valueJSON.toString().toStdString());
                             tempDataBuffer.useDateTimes = true;
-                            tempDataBuffer.startDateTime = time;
-                            tempDataBuffer.endDateTime   = time;
+                            tempDataBuffer.startDateTime = dt;
+                            tempDataBuffer.endDateTime   = dt;
                         } else {
                             // set values
                             double valueDouble = valueJSON.toDouble();

@@ -13,6 +13,8 @@ install:
   - sudo pip3 install gitpython
 
 script:
+  - sudo service influxdb start
+  - sudo service influxdb status
   - echo "clone dependency repos"
   - repoURL="https://github.com/${TRAVIS_REPO_SLUG}.git"
   - branch=${TRAVIS_BRANCH}
