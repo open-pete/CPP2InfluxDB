@@ -1,6 +1,6 @@
 #include <iostream>
 #include "include/DataBuffer.h"
-#include "include/dbinterface.h"
+#include "include/CPP2InfluxDB.h"
 #include "include/HTTPRequest.h"
 #include <boost/date_time/gregorian/gregorian.hpp>
 
@@ -23,8 +23,8 @@ int main() {
         cout << "Temperature : " << dataBuffer.data["Temperature"] <<  " " << DBP.unitOfMeasure << endl;
     }
 
-    //try dbinterface
-    DBInterface& dbi = DBInterface::getInstance();
+    //try CPP2InfluxDB
+    CPP2InfluxDB& dbi = CPP2InfluxDB::getInstance();
     dbi.init();
     dbi.writeToDataBase(dataBuffer);
     dataBuffer = dbi.readFromDataBase(dataBuffer);

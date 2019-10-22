@@ -1,7 +1,7 @@
 # CPP2InfluxDB
 C++ Implementation of database interface for an influx-database
 
-[![Build Status](https://travis-ci.org/open-pete/DBInterface.svg?branch=master)](https://travis-ci.org/open-pete/DBInterface) [![Coverage Status](https://coveralls.io/repos/github/open-pete/DBInterface/badge.svg?branch=master)](https://coveralls.io/github/open-pete/DBInterface?branch=master)
+[![Build Status](https://travis-ci.org/open-pete/CPP2InfluxDB.svg?branch=master)](https://travis-ci.org/open-pete/CPP2InfluxDB) [![Coverage Status](https://coveralls.io/repos/github/open-pete/CPP2InfluxDB/badge.svg?branch=master)](https://coveralls.io/github/open-pete/CPP2InfluxDB?branch=master)
 
 ## Requirements 
 
@@ -12,8 +12,8 @@ C++ Implementation of database interface for an influx-database
 
 ```bash
 # set variables
-repoName="DBInterface"
-repoURL="https://github.com/mezorian/DBInterface.git"
+repoName="CPP2InfluxDB"
+repoURL="https://github.com/mezorian/CPP2InfluxDB.git"
 branch="master"
 manifest="default.xml"
 
