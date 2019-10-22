@@ -8,8 +8,20 @@ before_install:
 
 install:
   - sudo apt-get -y install qt55[QTPACKAGE]
+  - git config --global color.ui false
+  - sudo apt-get -y install python3-pip
+  - sudo pip3 install gitpython
 
 script:
+  - echo "clone dependency repos"
+  - repoURL="https://github.com/${TRAVIS_REPO_SLUG}.git"
+  - branch=${TRAVIS_BRANCH}
+  - manifest="default.xml"
+  - git clone https://github.com/mezorian/EasyDepend.git
+  - cp EasyDepend/*.py .
+  - python3 example.py
+  - ls -la
+  - echo "start build"
   - source /opt/qt55/bin/qt55-env.sh
   - /opt/qt55/bin/qmake
   - make clean
