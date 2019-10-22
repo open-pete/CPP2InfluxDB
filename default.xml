@@ -4,5 +4,5 @@
 	<remote  name="github" fetch="https://github.com" />
 	<default revision="refs/heads/master" remote="github" sync-j="4" />
 	<project name="open-pete/Log-Writer" remote="github" revision="master" />
-	<project name="mezorian/DateTimePP" remote="github" revision="development" />
+	<project name="mezorian/DateTimePP" remote="github" revision="refs/tags/v1.1.0" />
 </manifest>
