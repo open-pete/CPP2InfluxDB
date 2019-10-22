@@ -114,13 +114,13 @@ TEST_CASE("DBInterface, write/read to/from database, getDBFailure") {
         REQUIRE(dbi.getDBFailure() == false);
     }
 
-    SECTION ("write / read date < 01.01.1972") {
+    SECTION ("write / read date < 01.01.1970") {
         dataBuffer.startDateTime.seconds(0);    // seconds
         dataBuffer.startDateTime.minutes(0);    // minutes
         dataBuffer.startDateTime.hours(0);      // hours
         dataBuffer.startDateTime.days(31);      // day
         dataBuffer.startDateTime.months(12);    // month
-        dataBuffer.startDateTime.years(1971);   // year
+        dataBuffer.startDateTime.years(1969);   // year
 
         dataBuffer.endDateTime = dataBuffer.startDateTime;
         dataBuffer.useDateTimes = true;
