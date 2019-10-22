@@ -8,21 +8,14 @@ before_install:
 
 install:
   - sudo apt-get -y install qt55[QTPACKAGE]
-  - curl https://storage.googleapis.com/git-repo-downloads/repo > ~/bin/repo
-  - chmod a+x ~/bin/repo
   - git config --global color.ui false
   - sudo apt-get -y install python3-pip
   - sudo pip3 install gitpython
-  - wget https://dl.influxdata.com/influxdb/releases/influxdb_1.7.7_amd64.deb
-  - sudo dpkg -i influxdb_1.7.7_amd64.deb
 
 script:
-  - echo "clone dependency repos"
   - sudo service influxdb start
   - sudo service influxdb status
-  - netstat -tuln
-  - ip a
-  - curl -i -XPOST http://localhost:8086/query --data-urlencode "q=CREATE DATABASE mydb"
+  - echo "clone dependency repos"
   - repoURL="https://github.com/${TRAVIS_REPO_SLUG}.git"
   - branch=${TRAVIS_BRANCH}
   - manifest="default.xml"
@@ -36,8 +29,6 @@ script:
   - make clean
   - make
   - ./DBInterface
-  - curl -G 'http://localhost:8086/query?pretty=true' --data-urlencode "db=WeatherData2" --data-urlencode "q=SELECT * FROM \"point\""
-  - offset=$(date +%z)
-  - echo "$offset"
-  - ls -la
-  - cat LogFile.txt
+
+after_success:
+  - coveralls --exclude lib --exclude tests --gcov-options '\-lp' --exclude test/catch.hpp
