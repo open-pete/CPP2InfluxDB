@@ -1,34 +1,34 @@
 /**
- * DBInterface.cpp
- * Purpose: implements class DBInterface
+ * CPP2InfluxDB.cpp
+ * Purpose: implements class CPP2InfluxDB
  *
  * @author Wall.Of.Death
  * @version 1.0 20160704
  */
 
 
-#include "../include/dbinterface.h"
+#include "../include/CPP2InfluxDB.h"
 
 /**
- * DBInterface::init
+ * CPP2InfluxDB::init
  * @brief creates a LogWriter-object
  */
-void DBInterface::init() {
+void CPP2InfluxDB::init() {
     createIfNotCreatedDataBase();
 
     // create LogWriter-object
-    log = LogWriter("DBInterface", PATH_OF_LOGFILE);
+    log = LogWriter("CPP2InfluxDB", PATH_OF_LOGFILE);
 
-    log << SLevel(INFO) << "Initialized DBInterface with url : " << URL_OF_DATABASE << "." << endl;
+    log << SLevel(INFO) << "Initialized CPP2InfluxDB with url : " << URL_OF_DATABASE << "." << endl;
 
 }
 
 /**
- * DBInterface::writeToDataBase
+ * CPP2InfluxDB::writeToDataBase
  * @brief writeToDataBase writes content of dataBuffer_ to database
  * @param dataBuffer_ data which is written to database
  */
-void DBInterface::writeToDataBase(DataBuffer& dataBuffer_) {
+void CPP2InfluxDB::writeToDataBase(DataBuffer& dataBuffer_) {
     if (readStatusOK()) {
 
         stringstream httpRequestUrl;
@@ -84,12 +84,12 @@ void DBInterface::writeToDataBase(DataBuffer& dataBuffer_) {
 }
 
 /**
- * DBInterface::readFromDataBase
+ * CPP2InfluxDB::readFromDataBase
  * @brief readFromDataBase reads the data which is requested by dataBuffer_ from database
  * @param dataBuffer_ requested data (is only filled with requested strings)
  * @return returns the requested dataBuffer_ which now contains requested data
  */
-vector<DataBuffer> DBInterface::readFromDataBase(DataBuffer& dataBuffer_) {
+vector<DataBuffer> CPP2InfluxDB::readFromDataBase(DataBuffer& dataBuffer_) {
 
     // create empty result
     vector<DataBuffer> result;
@@ -176,11 +176,11 @@ vector<DataBuffer> DBInterface::readFromDataBase(DataBuffer& dataBuffer_) {
 }
 
 /**
- * DBInterface::writeStatusOK
+ * CPP2InfluxDB::writeStatusOK
  * @brief writes the boolean value statusOK_ to database
  * @param statusOK_ boolean value which is wirtten to the database
  */
-void DBInterface::writeStatusOK(bool statusOK_) {
+void CPP2InfluxDB::writeStatusOK(bool statusOK_) {
     stringstream httpRequestUrl;
     stringstream httpRequestPostFields;
     HTTPRequest req;
@@ -206,11 +206,11 @@ void DBInterface::writeStatusOK(bool statusOK_) {
 }
 
 /**
- * DBInterface::readStatusOK
+ * CPP2InfluxDB::readStatusOK
  * @brief reads the boolean value statusOK from database and returns it.
  * @return returns the value of the boolean value statusOK
  */
-bool DBInterface::readStatusOK() {
+bool CPP2InfluxDB::readStatusOK() {
     // create url-string for select ... from ...
     stringstream httpRequestUrl;
     HTTPRequest req;
@@ -229,30 +229,30 @@ bool DBInterface::readStatusOK() {
 }
 
 /**
- * DBInterface::getDBFailure
+ * CPP2InfluxDB::getDBFailure
  * @brief returns value of private member variable dbFailure
  * @return value of private member variable dbFailure
  */
-bool DBInterface::getDBFailure() {
+bool CPP2InfluxDB::getDBFailure() {
     return dbFailure;
 }
 
 /**
- * DBInterface::createIfNotCreatedDataBase
+ * CPP2InfluxDB::createIfNotCreatedDataBase
  * @brief creates database defined by NAME_OF_DATBASE in config.h if not already created
  */
-void DBInterface::createIfNotCreatedDataBase() {
+void CPP2InfluxDB::createIfNotCreatedDataBase() {
     HTTPRequest request;
     request.post(URL_OF_DATABASE + "/query?q=create+database+"+NAME_OF_DATBASE+"&db=_internal","");
 }
 
 /**
- * DBInterface::cleanString
+ * CPP2InfluxDB::cleanString
  * @brief removes every char that is not an alphabetic character, a number or '_'
  * @param stringToClean_ the string to clean
  * @return returns stringToClean_ without anything but character, numbers and '_'
  */
-string DBInterface::cleanString(const string &stringToClean_) {
+string CPP2InfluxDB::cleanString(const string &stringToClean_) {
     string result = stringToClean_;
     // remove everything that not is not alphanum and that is not _
     result.erase(
@@ -266,12 +266,12 @@ string DBInterface::cleanString(const string &stringToClean_) {
 }
 
 /**
- * DBInterface::cutValueToInfluxDBRange
+ * CPP2InfluxDB::cutValueToInfluxDBRange
  * @brief cuts val_ to the range INFLUXDB_MAX <= val_ >= INFLUXDB_MIN
  * @param val_ value to cut
  * @return returns INFLUXDB_MAX / INFLUXDB_MIN if value is bigger/smaller as INFLUXDB_MAX/INFLUXDB_MIN
  */
-double DBInterface::cutValueToInfluxDBRange(double val_) {
+double CPP2InfluxDB::cutValueToInfluxDBRange(double val_) {
     if (val_ > INFLUXDB_MAX) {
         return INFLUXDB_MAX;
     } else if (val_ < INFLUXDB_MIN) {
@@ -283,7 +283,7 @@ double DBInterface::cutValueToInfluxDBRange(double val_) {
 
 
 /**
- * DBInterface::jsonToDataBufferVector
+ * CPP2InfluxDB::jsonToDataBufferVector
  * @brief iterate through JSON and return data inside json_ as vector of DataBuffer
  * @param json_ JSON string to convert
  * @return returns a vector of DataBuffer which contains the data inside json_
@@ -293,7 +293,7 @@ double DBInterface::cutValueToInfluxDBRange(double val_) {
  * If the JSONs origin was InfluxDB, the return values contains a DataBuffer for
  * every DateTime which was requested from InfluxDB.
  */
-vector<DataBuffer> DBInterface::jsonToDataBufferVector(const string &json_, const string& dataSource_) {
+vector<DataBuffer> CPP2InfluxDB::jsonToDataBufferVector(const string &json_, const string& dataSource_) {
     vector<DataBuffer> result;
     QString jsonQString(json_.c_str());
     QJsonDocument jsonDocument = QJsonDocument::fromJson(jsonQString.toUtf8());

@@ -8,7 +8,7 @@ QT       += core
 QT       += network
 QT       -= gui
 
-TARGET = DBInterface
+TARGET = CPP2InfluxDB
 CONFIG   += console
 CONFIG   -= app_bundle
 CONFIG   += c++11
@@ -30,13 +30,13 @@ SOURCES += main.cpp \
     open-pete/Log-Writer/src/LogWriter.cpp \
     open-pete/Log-Writer/src/SLevel.cpp \
     src/DataBuffer.cpp \
-    src/dbinterface.cpp \
+    src/CPP2InfluxDB.cpp \
     src/HTTPRequest.cpp
 
 HEADERS += \
     include/config.h \
     include/DataBuffer.h \
-    include/dbinterface.h \
+    include/CPP2InfluxDB.h \
     include/HTTPRequest.h \
     include/catch.hpp \
     mezorian/DateTimePP/include/DateTimePP.h \
