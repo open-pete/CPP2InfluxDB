@@ -1,7 +1,7 @@
 # DBInterface
 C++ Implementation of database interface for an influx-database
 
-[![Build Status](https://travis-ci.org/open-pete/DBInterface.svg?branch=master)](https://travis-ci.org/open-pete/DBInterface)
+[![Build Status](https://travis-ci.org/open-pete/DBInterface.svg?branch=master)](https://travis-ci.org/open-pete/DBInterface) [![Coverage Status](https://coveralls.io/repos/github/open-pete/DBInterface/badge.svg?branch=master)](https://coveralls.io/github/open-pete/DBInterface?branch=master)
 
 ## Requirements 
 
