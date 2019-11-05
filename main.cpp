@@ -8,6 +8,7 @@ TEST_CASE( "HTTPRequest.post works") {
     string url;
     string postFields;
 
+
     SECTION("url_ valid, postFields_ empty") {
         url = "http://localhost:8086/query?q=create+database+WeatherData2&db=_internal";
         postFields = "";
