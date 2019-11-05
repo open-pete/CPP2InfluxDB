@@ -13,7 +13,7 @@ C++ Implementation of database interface for an influx-database
 ```bash
 # set variables
 repoName="CPP2InfluxDB"
-repoURL="https://github.com/mezorian/CPP2InfluxDB.git"
+repoURL="https://github.com/open-pete/CPP2InfluxDB.git"
 branch="master"
 manifest="default.xml"
 
