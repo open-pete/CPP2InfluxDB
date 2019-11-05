@@ -1,7 +1,7 @@
 # CPP2InfluxDB
 C++ Implementation of database interface for an influx-database
 
-[![Build Status](https://travis-ci.org/open-pete/CPP2InfluxDB.svg?branch=master)](https://travis-ci.org/open-pete/CPP2InfluxDB) [![Coverage Status](https://coveralls.io/repos/github/open-pete/CPP2InfluxDB/badge.svg?branch=master)](https://coveralls.io/github/open-pete/CPP2InfluxDB?branch=master)
+[![Build Status](https://travis-ci.org/open-pete/CPP2InfluxDB.svg?branch=development)](https://travis-ci.org/open-pete/CPP2InfluxDB) [![Coverage Status](https://coveralls.io/repos/github/open-pete/CPP2InfluxDB/badge.svg?branch=development)](https://coveralls.io/github/open-pete/CPP2InfluxDB?branch=development)
 
 ## Requirements 
 
